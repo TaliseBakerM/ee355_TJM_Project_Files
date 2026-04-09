@@ -1,6 +1,6 @@
 Partners:
 Talise Baker-Matsuoka, bakermat@usc.edu, 7755662598
----
+Jessica Li, jmli@usc.edu, 4875063007
 ---
 
 
