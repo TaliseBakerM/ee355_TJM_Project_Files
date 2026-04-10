@@ -19,6 +19,9 @@ Phone (Home) 310-192-2011
 310-192-2011
 
 Testing Part 2 - Date, Person class
+Note: As far as I could tell, the project manual did not describe a preference between outputting a date like "January 03, 1961" and 
+"January 3, 1961" so I assumed I could choose which to display. I decided to display the second version since I think that's more commonly used. 
+
 - Uncomment the code at the bottom of person.cpp and run:
 g++ contact.cpp date.cpp person.cpp -o test 
 ./ test
