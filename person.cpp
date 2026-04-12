@@ -12,6 +12,9 @@ Person::Person(string f_name, string l_name, string b_date, string email_addr, s
     phone = new Phone("Home", phone_num);
     email = new Email("Work", email_addr);
     birthday = new Date(b_date);
+
+    this->next = NULL;
+    this->prev = NULL;
 }
 
 // Destructor

@@ -7,6 +7,9 @@
 using namespace std;
 
 class Person {
+
+    friend class Network;
+
 private:
     // Attributes
     string f_name;
@@ -14,6 +17,9 @@ private:
     Phone* phone;
     Email* email;
     Date* birthday;
+
+    Person* next;
+    Person* prev;
 
 public:
     // Person constructor and destructor
