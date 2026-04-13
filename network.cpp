@@ -62,6 +62,15 @@ Person* Network::search(string fname, string lname){
 
 
 void Network::loadDB(string filename){
+    // Testing loadDB
+    cout << "Test: Creating one person manually" << endl;
+    Person* testPerson = new Person("Test", "User", "1/1/2000", "test@test.com", "310-555-1234");
+    cout << "Test person created successfully" << endl;
+    cout << "  f_name: " << testPerson->f_name << endl;
+    cout << "  l_name: " << testPerson->l_name << endl;
+    cout << "  b_date: " << testPerson->birthday->print_date() << endl;
+    cout << "  email: " << testPerson->email->get_contact() << endl;
+    cout << "  phone: " << testPerson->phone->get_contact() << endl;
     // TODO: Complete this method
     ifstream infile(filename);
     if (!infile) {
@@ -70,26 +79,42 @@ void Network::loadDB(string filename){
     }
     string f_name, l_name, b_date, email_line, phone_line;
     while (getline(infile, f_name)) {
+        cout << "Read first name: " << f_name << endl;
         if (f_name.empty() || f_name == "--------------------") {
+            // cout << "Skipping empty line or delimiter" << endl;
             continue;
         }
         else {
             getline(infile, l_name);
+            // cout << "Read last name: " << l_name << endl;
             getline(infile, b_date);
+            // cout << "Read birthdate: " << b_date << endl;
             getline(infile, email_line);
+            //cout << "Read email line: " << email_line << endl;
             getline(infile, phone_line);
+            // cout << "Read phone line: " << phone_line << endl;
         }
 
         // Parse email_line to get email type and email address
         int pos = email_line.find(')');
-        string email = email_line.substr(pos + 1);
-        string email_type = email_line.substr(0, pos + 1);
+        string email = email_line.substr(pos + 2); // +2 to skip the whitespace after )
+        string email_type = email_line.substr(1, pos - 1);
+        // cout << "Parsed email type: " << email_type << ", email address: " << email << endl;
         // Parse phone_line to get phone type and phone number
         pos = phone_line.find(')');
-        string phone = phone_line.substr(pos + 1);
-        string phone_type = phone_line.substr(0, pos + 1);
+        string phone = phone_line.substr(pos + 2);
+        string phone_type = phone_line.substr(1, pos - 1);
+        // cout << "Parsed phone type: " << phone_type << ", phone number: " << phone << endl;
         Person* newEntry = new Person(f_name, l_name, b_date, email, phone);
+        // cout << "Created new person: " << f_name << " " << l_name << endl;
+        cout << "  f_name: " << newEntry->f_name << endl;
+        cout << "  l_name: " << newEntry->l_name << endl;
+        cout << "  b_date: " << newEntry->birthday->print_date() << endl;
+        cout << "  email: " << newEntry->email->get_contact() << endl;
+        cout << "  phone: " << newEntry->phone->get_contact() << endl;
+        cout << "About to push_front, email='" << email << "' phone='" << phone << "'" << endl;
         push_front(newEntry);
+        cout << "Added new person to network" << endl;
     }
 }
 
@@ -126,13 +151,20 @@ void Network::printDB(){
 }
 
 void Network::push_front(Person* newEntry){
+    cout << "push_front START, newEntry=" << newEntry << " head=" << head << endl;
     newEntry->prev = NULL;
+    cout << "push_front successfully set newEntry->prev = NULL" << endl;
     newEntry->next = head;
+    cout << "push_front successfully set newEntry->next = head" << endl;
 
-    if (head != NULL)
+    if (head != NULL) {
         head->prev = newEntry;
-    else
+        cout << "push_front head is not NULL, head=" << head << endl;
+    }
+    else {
         tail = newEntry;
+        cout << "push_front head is NULL, set tail = newEntry" << endl;
+    }
     
     head = newEntry;
     count++;
