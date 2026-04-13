@@ -39,3 +39,44 @@ January 13, 1961
 Phone (Home) 310-192-2847
 
 Email (Work) veep@wh.gov
+
+Testing Part 3 - Network class
+- Uncomment the code at the bottom of network.cpp and run:
+g++ network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
+./test
+
+Prints:
+Starting main
+Loading network database
+Network loaded from networkDB.txt with -114435373 people
+Network created
+Number of people: -114435373
+------------------------------
+Burbank, Truman
+
+January 17, 1962
+
+Phone (Home): 213-517-9989
+
+Email (Work): document@info.edu
+------------------------------
+Van Nostrand, Martin
+
+July 24, 1949
+
+Phone (Home): 224-432-5809
+
+Email (Work): myemail@yahoo.com
+------------------------------
+Louis-Dreyfus, Julia Scarlett Elizabeth
+
+January 13, 1961
+
+Phone (Home): 310-291-7482
+
+Email (Work): something@email.com
+------------------------------
+Printed DB
+Saved DB
+
+The showMenu() function works as expected after the above test lines print.

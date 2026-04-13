@@ -14,9 +14,9 @@ Network::Network(string fileName){
     // TODO: complete this method!
     // Implement it in one single line!
     // You may need to implement the load method before this!
-    cout << "Loading network database" << endl;
+    cout << "Loading network database\n";
     loadDB(fileName);
-    cout << "Network loaded from " << fileName << " with " << count << " people" << endl;
+    cout << "Network loaded from " << fileName << " with " << count << " people\n";
 }
 
 Network::~Network(){ 
@@ -63,65 +63,65 @@ Person* Network::search(string fname, string lname){
 
 void Network::loadDB(string filename){
     // TODO: Complete this method
-    ifstream infile(filename);
+    ifstream infile(filename.c_str());
     if (!infile) {
-        cout << filename << " does not exist." << endl;
+        cout << filename << " does not exist.\n";
         return;
     }
     string f_name, l_name, b_date, email_line, phone_line;
     while (getline(infile, f_name)) {
-        // cout << "Read first name: " << f_name << endl;
+        // cout << "Read first name: " << f_name << "\n";
         if (f_name.empty() || f_name == "--------------------") {
-            // cout << "Skipping empty line or delimiter" << endl;
+            // cout << "Skipping empty line or delimiter\n";
             continue;
         }
         else {
             getline(infile, l_name);
-            // cout << "Read last name: " << l_name << endl;
+            // cout << "Read last name: " << l_name << "\n";
             getline(infile, b_date);
-            // cout << "Read birthdate: " << b_date << endl;
+            // cout << "Read birthdate: " << b_date << "\n";
             getline(infile, email_line);
-            //cout << "Read email line: " << email_line << endl;
+            //cout << "Read email line: " << email_line << "\n";
             getline(infile, phone_line);
-            // cout << "Read phone line: " << phone_line << endl;
+            // cout << "Read phone line: " << phone_line << "\n";
         }
 
         // Parse email_line to get email type and email address
         int pos = email_line.find(')');
         string email = email_line.substr(pos + 2); // +2 to skip the whitespace after )
         string email_type = email_line.substr(1, pos - 1);
-        // cout << "Parsed email type: " << email_type << ", email address: " << email << endl;
+        // cout << "Parsed email type: " << email_type << ", email address: " << email << "\n";
         // Parse phone_line to get phone type and phone number
         pos = phone_line.find(')');
         string phone = phone_line.substr(pos + 2);
         string phone_type = phone_line.substr(1, pos - 1);
-        // cout << "Parsed phone type: " << phone_type << ", phone number: " << phone << endl;
+        // cout << "Parsed phone type: " << phone_type << ", phone number: " << phone << "\n";
         Person* newEntry = new Person(f_name, l_name, b_date, email, phone);
-        // cout << "Created new person: " << f_name << " " << l_name << endl;
-        // cout << "  f_name: " << newEntry->f_name << endl;
-        // cout << "  l_name: " << newEntry->l_name << endl;
-        // cout << "  b_date: " << newEntry->birthday->print_date() << endl;
-        // cout << "  email: " << newEntry->email->get_contact() << endl;
-        // cout << "  phone: " << newEntry->phone->get_contact() << endl;
-        // cout << "About to push_front, email='" << email << "' phone='" << phone << "'" << endl;
+        // cout << "Created new person: " << f_name << " " << l_name << "\n";
+        // cout << "  f_name: " << newEntry->f_name << "\n";
+        // cout << "  l_name: " << newEntry->l_name << "\n";
+        // cout << "  b_date: " << newEntry->birthday->print_date() << "\n";
+        // cout << "  email: " << newEntry->email->get_contact() << "\n";
+        // cout << "  phone: " << newEntry->phone->get_contact() << "\n";
+        // cout << "About to push_front, email='" << email << "' phone='" << phone << "'\n";
         push_front(newEntry);
-        // cout << "Added new person to network" << endl;
+        // cout << "Added new person to network\n";
     }
 }
 
 void Network::saveDB(string filename){
     // TODO: Complete this method
-    ofstream outfile(filename);
+    ofstream outfile(filename.c_str());
     if (!outfile) {
-        cout << "Error opening file for writing." << endl;
+        cout << "Error opening file for writing.\n";
         return;
     }
     Person* current = head;
     while (current != NULL) {
-        outfile << current->l_name << ", " << current->f_name << endl << endl;
-        outfile << current->birthday->print_date() << endl << endl;
-        outfile << current->phone->get_contact() << endl << endl;
-        outfile << current->email->get_contact() << endl << endl;
+        outfile << current->l_name << ", " << current->f_name << "\n" << "\n";
+        outfile << current->birthday->print_date() << "\n" << "\n";
+        outfile << current->phone->get_contact() << "\n" << "\n";
+        outfile << current->email->get_contact() << "\n" << "\n";
         current = current->next;
     }
 }
@@ -131,30 +131,30 @@ void Network::printDB(){
     // Leave me alone! I know how to print! 
     // Note: Notice that we don't need to update this even after adding to Personattributes
     // This is a feature of OOP, classes are supposed to take care of themselves!
-    cout << "Number of people: " << count << endl;
-    cout << "------------------------------" << endl;
+    cout << "Number of people: " << count << "\n";
+    cout << "------------------------------\n";
     Person* ptr = head;
     while(ptr != NULL){
         ptr->print_person();
-        cout << "------------------------------" << endl;
+        cout << "------------------------------\n";
         ptr = ptr->next;
     }
 }
 
 void Network::push_front(Person* newEntry){
-    // cout << "push_front START, newEntry=" << newEntry << " head=" << head << endl;
+    // cout << "push_front START, newEntry=" << newEntry << " head=" << head << "\n";
     newEntry->prev = NULL;
-    // cout << "push_front successfully set newEntry->prev = NULL" << endl;
+    // cout << "push_front successfully set newEntry->prev = NULL\n";
     newEntry->next = head;
-    // cout << "push_front successfully set newEntry->next = head" << endl;
+    // cout << "push_front successfully set newEntry->next = head\n";
 
     if (head != NULL) {
         head->prev = newEntry;
-        // cout << "push_front head is not NULL, head=" << head << endl;
+        // cout << "push_front head is not NULL, head=" << head << "\n";
     }
     else {
         tail = newEntry;
-        // cout << "push_front head is NULL, set tail = newEntry" << endl;
+        // cout << "push_front head is NULL, set tail = newEntry\n";
     }
     
     head = newEntry;
@@ -230,7 +230,7 @@ void Network::showMenu(){
         } else {
             cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cout << "Wrong option! " << endl;
+            cout << "Wrong option! \n";
             return;
         }
         
@@ -247,7 +247,7 @@ void Network::showMenu(){
             // and people are delimited similar to "networkDB.txt" format
             cin >> fileName;
             saveDB(fileName);
-            cout << "Network saved in " << fileName << endl;
+            cout << "Network saved in " << fileName << "\n";
         }
         else if (opt==2){
             // TODO: Complete me!
@@ -260,9 +260,9 @@ void Network::showMenu(){
             cout << "Enter the name of the load file: ";
             cin >> fileName; 
             // If file with name FILENAME does not exist: 
-            ifstream checkFile(fileName);
+            ifstream checkFile(fileName.c_str());
             if (!checkFile) {
-                cout << "File " << fileName << " does not exist!" << endl;
+                cout << "File " << fileName << " does not exist!\n";
             }
             else {
             // If file is loaded successfully, also print the count of people in it: 
@@ -275,10 +275,10 @@ void Network::showMenu(){
             // TODO: use push_front, and not push_back 
             // Add a new Person ONLY if it does not exists!
             cout << "First name: ";
-            cin >> fname;
+            cin >> ws;
             getline(cin, fname); // Need to add this because otherwise, the last name will automatically be detected as what is after the whitespace.
             cout << "Last name: ";
-            cin >> lname;
+            cin >> ws;
             getline(cin, lname);
             if (search(fname, lname) != NULL) {
                 cout << "Person already exists! \n";
@@ -322,7 +322,7 @@ void Network::showMenu(){
             while (current != NULL) {
                 if (current->l_name == lname) {
                     current->print_person();
-                    cout << "------------------------------" << endl;
+                    cout << "------------------------------\n";
                     count++;
                 }
                 current = current->next;
@@ -349,15 +349,15 @@ void Network::showMenu(){
 // ./test  
 
 int main() {
-    cout << "Starting main" << endl;
+    cout << "Starting main\n";
     // Testing loadDB
     Network network("networkDB.txt"); // Already loadDB in the constructor
-    cout << "Network created" << endl;
+    cout << "Network created\n";
     network.printDB();
-    cout << "Printed DB" << endl;
+    cout << "Printed DB\n";
     // Testing saveDB
     network.saveDB("networkDB_saved.txt");
-    cout << "Saved DB" << endl;
+    cout << "Saved DB\n";
 
     network.showMenu();
 
