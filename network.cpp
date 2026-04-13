@@ -11,9 +11,6 @@ Network::Network(){
 
 
 Network::Network(string fileName){
-    head = NULL;
-    tail = NULL;
-    count = 0;
     // TODO: complete this method!
     // Implement it in one single line!
     // You may need to implement the load method before this!
@@ -71,6 +68,9 @@ void Network::loadDB(string filename){
         cout << filename << " does not exist.\n";
         return;
     }
+    head=NULL;
+    tail=NULL;
+    count=0;
     string f_name, l_name, b_date, email_line, phone_line;
     while (getline(infile, f_name)) {
         // cout << "Read first name: " << f_name << "\n";
