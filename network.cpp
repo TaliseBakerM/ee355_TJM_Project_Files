@@ -205,7 +205,7 @@ bool Network::remove(string fname, string lname){
         }
         current = current->next;
     }
-    return NULL;
+    return false;
 }
 
 
