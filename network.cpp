@@ -11,6 +11,9 @@ Network::Network(){
 
 
 Network::Network(string fileName){
+    head = NULL;
+    tail = NULL;
+    count = 0;
     // TODO: complete this method!
     // Implement it in one single line!
     // You may need to implement the load method before this!
