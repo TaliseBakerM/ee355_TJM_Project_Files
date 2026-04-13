@@ -14,7 +14,9 @@ Network::Network(string fileName){
     // TODO: complete this method!
     // Implement it in one single line!
     // You may need to implement the load method before this!
+    cout << "Loading network database" << endl;
     loadDB(fileName);
+    cout << "Network loaded from " << fileName << " with " << count << " people" << endl;
 }
 
 Network::~Network(){ 
@@ -66,7 +68,7 @@ void Network::loadDB(string filename){
         cout << filename << " does not exist." << endl;
         return;
     }
-    string f_name, l_name, b_date, email, phone;
+    string f_name, l_name, b_date, email_line, phone_line;
     while (getline(infile, f_name)) {
         if (f_name.empty() || f_name == "--------------------") {
             continue;
@@ -74,13 +76,20 @@ void Network::loadDB(string filename){
         else {
             getline(infile, l_name);
             getline(infile, b_date);
-            getline(infile, email);
-            getline(infile, phone);
+            getline(infile, email_line);
+            getline(infile, phone_line);
         }
-        if (infile) { // Check if the read was successful
-            Person* newEntry = new Person(f_name, l_name, b_date, email, phone);
-            push_front(newEntry);
-        }
+
+        // Parse email_line to get email type and email address
+        int pos = email_line.find(')');
+        string email = email_line.substr(pos + 1);
+        string email_type = email_line.substr(0, pos + 1);
+        // Parse phone_line to get phone type and phone number
+        pos = phone_line.find(')');
+        string phone = phone_line.substr(pos + 1);
+        string phone_type = phone_line.substr(0, pos + 1);
+        Person* newEntry = new Person(f_name, l_name, b_date, email, phone);
+        push_front(newEntry);
     }
 }
 
@@ -310,13 +319,14 @@ void Network::showMenu(){
 // ./test  
 
 int main() {
+    cout << "Starting main" << endl;
     // Testing loadDB
-    Network network("networkDB.txt");
-    network.loadDB("networkDB.txt");
+    Network network("networkDB.txt"); // Already loadDB in the constructor
+    cout << "Network created" << endl;
     network.printDB();
-    
+    cout << "Printed DB" << endl;
     // Testing saveDB
     network.saveDB("networkDB_saved.txt");
-
+    cout << "Saved DB" << endl;
     return 0;
 }

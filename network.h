@@ -1,6 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 #include "person.h"
+#include "contact.h"
 #include "date.h"
 // You may need to add more libraries 
 #include <stdlib.h>
