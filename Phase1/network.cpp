@@ -225,7 +225,6 @@ void Network::showMenu(){
         cout << "3. Add a new person \n";
         cout << "4. Remove a person \n";
         cout << "5. Print people with last name  \n";
-        cout << "6. Connect  \n";
         cout << "\nSelect an option ... ";
         
         if (cin >> opt) {
@@ -239,7 +238,7 @@ void Network::showMenu(){
         }
         
         // You may need these variables! Add more if you want!
-        string fname, lname, fileName, bdate, fname1, lname1, fname2, lname2;
+        string fname, lname, fileName, bdate;
         cout << "\033[2J\033[1;1H";
 
         if (opt==1){
@@ -336,65 +335,6 @@ void Network::showMenu(){
             }
             if (count == 0) {
                 cout << "Person not found! \n";
-            }
-        }
-        else if (opt==6){
-            // Phase 2 Part 1: Add new option in Main Menu
-            cout << "Make friends: " << endl;
-            cout << "Person 1" << endl;
-            cout << "First name: ";
-            getline(cin, fname1);
-            cout << "Last name: ";
-            getline(cin, lname1);
-            int count = 0;
-            Person* current = head;
-            while (current != NULL) {
-                if (current->f_name == fname1 && current->l_name == lname1) {
-                    count++;
-                }
-                current = current->next;
-            }
-            if (count == 0) {
-                cout << "Person not found! \n";
-            }
-            else {
-                cout << "Person 2" << endl;;
-                cout << "First name: ";
-                getline(cin, fname2);
-                cout << "Last name: ";
-                getline(cin, lname2);
-                count = 0;
-                current = head;
-                while (current != NULL) {
-                    if (current->f_name == fname2 && current->l_name == lname2) {
-                        count++;
-                    }
-                    current = current->next;
-                }
-
-                if (count == 0) { 
-                    cout << "Person not found! \n";
-                }
-                else {
-                    cout << endl;
-                    current = head;
-                    while (current != NULL) {
-                        if (current->f_name == fname1 && current->l_name == lname1) {
-                            current->print_person();
-                            cout << endl;
-                        }
-                        current = current->next;
-                    }
-
-                    current = head;
-                    while (current != NULL) {
-                        if (current->f_name == fname2 && current->l_name == lname2) {
-                            current->print_person();
-                            cout << endl;
-                        }
-                        current = current->next;
-                    }
-                }
             }
         }
         else
