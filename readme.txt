@@ -48,9 +48,9 @@ g++ network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
 Prints:
 Starting main
 Loading network database
-Network loaded from networkDB.txt with -114435373 people
+Network loaded from networkDB.txt with 3 people
 Network created
-Number of people: -114435373
+Number of people: 3
 ------------------------------
 Burbank, Truman
 
@@ -80,3 +80,14 @@ Printed DB
 Saved DB
 
 The showMenu() function works as expected after the above test lines print.
+
+Note: Part 3 can be run with c++11 and:
+Network::Network(string fileName) : Network(){
+    // TODO: complete this method!
+    // Implement it in one single line!
+    // You may need to implement the load method before this!
+    cout << "Loading network database\n";
+    loadDB(fileName);
+    cout << "Network loaded from " << fileName << " with " << count << " people\n";
+}
+but the code file for Part 1 said to not use c++11 so we used a different method instead to implement it in one line.
