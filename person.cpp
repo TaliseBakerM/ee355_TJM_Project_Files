@@ -1,8 +1,9 @@
 #include "person.h"
 #include <iostream>
+
 using namespace std;
 
-// Constructor to init. all desired parameters
+// Constructor to init. parameters
 Person::Person(string f_name, string l_name, string b_date, string email_addr, string phone_num) {
     // Store names
     this->f_name = f_name;
@@ -30,6 +31,27 @@ void Person::print_person() {
     cout << birthday->print_date() << endl << endl;
     cout << phone->get_contact() << endl << endl;
     cout << email->get_contact() << endl;
+}
+
+// Adds a Person pointer to friend list
+void Person:makeFriend(Person* newFriend) {
+    if (newFriend == NULL) { // Check if pointer is null (invalid person)
+        return;
+    }
+
+    if (newFriend == this) { // Person cannot be friends with themselves
+        return;
+    }
+
+    // Check if friend is already in the list
+    for (size_t i = 0; i < myfriends.size(); i++) {
+        if (myfriends[i] == newFriend) { // Friend already exists so we don't need to add again
+            return;
+        }
+    }
+
+    // Otherwise, add new friend to the vector
+    myfriends.push_back(newFriend);
 }
 
 // Testing!
