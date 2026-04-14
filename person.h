@@ -1,25 +1,25 @@
 #ifndef PERSON_H
 #define PERSON_H
 
+#include "date.h"
+#include "contact.h"
+#include "fstream"
+
 #include <string>
 #include <vector>
-
-#include "contact.h"
-#include "date.h"
 
 using namespace std;
 
 class Person {
-
     friend class Network;
 
 private:
     // Attributes
     string f_name;
     string l_name;
-    Phone* phone;
-    Email* email;
-    Date* birthday;
+    Date *birthday;
+    Email *email;
+    Phone *phone;
 
     Person* next;
     Person* prev;
@@ -29,14 +29,18 @@ private:
 
 public:
     // Person constructor and destructor
-    Person(string f_name, string l_name, string b_date, string email, string phone);
+    Person();
     ~Person();
+    Person(string filename);
+    Person(string f_name, string l_name, string b_date, string email, string phone);
 
-    // Print function
     void print_person();
+	void set_person();
+	void set_person(string filename);
+    bool operator==(const Person& rhs);
+    bool operator!=(const Person& rhs);
 
-    // Friend function
-    void makeFriend(Person* newFriend);
+    void makeFriend(Person* newFriend); // Friend function
 };
 
 #endif
