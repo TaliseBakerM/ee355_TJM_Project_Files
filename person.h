@@ -16,6 +16,8 @@ private:
     Phone* phone = nullptr;
     Email* email = nullptr;
 
+    vector<Person*> myfriends; // Phase 2 Part 2
+
 public:
     Person();
     ~Person();
@@ -29,6 +31,7 @@ public:
     bool operator!=(const Person& rhs);
 
     void print_person();
+    void makeFriend(Person* newFriend); // Phase 2 Part 2
 };
 
 #endif
