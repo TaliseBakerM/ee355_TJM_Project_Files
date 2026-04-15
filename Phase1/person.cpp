@@ -133,32 +133,6 @@ void Person::print_person(){
     email->print();
 }
 
-
-
-/*
-// Adds a Person pointer to friend list
-void Person::makeFriend(Person* newFriend) {
-    if (newFriend == NULL) { // Check if pointer is null (invalid person)
-        return;
-    }
-
-    if (newFriend == this) { // Person cannot be friends with themselves
-        return;
-    }
-
-    // Check if friend is already in the list
-    for (size_t i = 0; i < myfriends.size(); i++) {
-        if (myfriends[i] == newFriend) { // Friend already exists so we don't need to add again
-            return;
-        }
-    }
-
-    // Otherwise, add new friend to the vector
-    myfriends.push_back(newFriend);
-}
-*/
-
-
 // Testing!
 // Uncomment and run: 
 // g++ contact.cpp date.cpp person.cpp -o test
