@@ -155,6 +155,23 @@ void Person::makeFriend(Person* newFriend) {
     myfriends.push_back(newFriend);
 }
 
+// Phase 2 Part 2 Testing!!
+void Person::printFriends() const {
+    cout << f_name << " " << l_name << "'s friends:\n";
+
+    if (myfriends.size() == 0) {
+        cout << "No friends.\n";
+        return;
+    }
+
+    for (size_t i = 0; i < myfriends.size(); i++) {
+        cout << myfriends[i]->l_name << ", " << myfriends[i]->f_name << endl;
+    }
+}
+
+int Person::getFriendCount() const {
+    return myfriends.size();
+}
 
 // Testing!
 // Uncomment and run: 

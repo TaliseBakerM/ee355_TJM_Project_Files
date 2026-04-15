@@ -3,12 +3,16 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+
 #include "date.h"
 #include "contact.h"
 
 using namespace std;
 
 class Person {
+    friend class Network;
+
 private:
     string f_name;
     string l_name;
@@ -17,6 +21,12 @@ private:
     Email* email = nullptr;
 
     vector<Person*> myfriends; // Phase 2 Part 2
+
+    // For linked list
+    Person* next;
+    Person* prev;
+    
+    friend class Network;
 
 public:
     Person();
@@ -32,6 +42,10 @@ public:
 
     void print_person();
     void makeFriend(Person* newFriend); // Phase 2 Part 2
+
+    // Phase 2 Part 2 Testing
+    void printFriends() const;
+    int getFriendCount() const;
 };
 
 #endif

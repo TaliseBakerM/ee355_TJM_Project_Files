@@ -1,7 +1,8 @@
 #include "network.h"
-#include <limits>
+
 #include "misc.h"
 #include <fstream>
+#include <limits>
 
 Network::Network(){
     head = NULL;
@@ -103,7 +104,7 @@ void Network::loadDB(string filename){
         // cout << "Created new person: " << f_name << " " << l_name << "\n";
         // cout << "  f_name: " << newEntry->f_name << "\n";
         // cout << "  l_name: " << newEntry->l_name << "\n";
-        // cout << "  b_date: " << newEntry->birthday->print_date() << "\n";
+        // cout << "  b_date: " << newEntry->birthdate->print_date() << "\n";
         // cout << "  email: " << newEntry->email->get_contact() << "\n";
         // cout << "  phone: " << newEntry->phone->get_contact() << "\n";
         // cout << "About to push_front, email='" << email << "' phone='" << phone << "'\n";
@@ -122,7 +123,7 @@ void Network::saveDB(string filename){
     Person* current = head;
     while (current != NULL) {
         outfile << current->l_name << ", " << current->f_name << "\n" << "\n";
-        outfile << current->birthday->print_date() << "\n" << "\n";
+        outfile << current->birthdate->print_date() << "\n" << "\n";
         outfile << current->phone->get_contact() << "\n" << "\n";
         outfile << current->email->get_contact() << "\n" << "\n";
         current = current->next;
@@ -293,7 +294,7 @@ void Network::showMenu(){
                 push_front(newPerson); // Add to the front of the list
                 cout << "Enter the birthdate (MM/DD/YYYY): ";
                 cin >> bdate;
-                newPerson->birthday = new Date(bdate);
+                newPerson->birthdate = new Date(bdate);
                 newPerson->email->set_contact();
                 newPerson->phone->set_contact();
             }
@@ -340,66 +341,42 @@ void Network::showMenu(){
         }
         else if (opt==6){
             // Phase 2 Part 1: Add new option in Main Menu
+            // Note: Replaced count w/ person1 and person2 pointers for cleanliness
+
             cout << "Make friends: " << endl;
+
             cout << "Person 1" << endl;
             cout << "First name: ";
             getline(cin, fname1);
+
             cout << "Last name: ";
             getline(cin, lname1);
-            int count = 0;
-            Person* current = head;
-            while (current != NULL) {
-                if (current->f_name == fname1 && current->l_name == lname1) {
-                    count++;
-                }
-                current = current->next;
-            }
-            if (count == 0) {
+
+            Person* person1 = search(fname1, lname1);
+            if (person1 == NULL) {
                 cout << "Person not found! \n";
             }
             else {
-                cout << "Person 2" << endl;;
+                cout << "Person 2" << endl;
                 cout << "First name: ";
                 getline(cin, fname2);
+
                 cout << "Last name: ";
                 getline(cin, lname2);
-                count = 0;
-                current = head;
-                while (current != NULL) {
-                    if (current->f_name == fname2 && current->l_name == lname2) {
-                        count++;
-                    }
-                    current = current->next;
-                }
 
-                if (count == 0) { 
+                Person* person2 = search(fname2, lname2);
+                if (person2 == NULL) {
                     cout << "Person not found! \n";
                 }
                 else {
-                    cout << endl;
-                    current = head;
-                    while (current != NULL) {
-                        if (current->f_name == fname1 && current->l_name == lname1) {
-                            current->print_person();
-                            cout << endl;
-                        }
-                        current = current->next;
-                    }
-
-                    current = head;
-                    while (current != NULL) {
-                        if (current->f_name == fname2 && current->l_name == lname2) {
-                            current->print_person();
-                            cout << endl;
-                        }
-                        current = current->next;
-                    }
+                    person1->makeFriend(person2);
+                    person2->makeFriend(person1);
                 }
             }
         }
         else
             cout << "Nothing matched!\n";
-        
+
         cin.clear();
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cout << "\n\nPress Enter key to go back to main menu ... ";
@@ -416,6 +393,7 @@ void Network::showMenu(){
 
 int main() {
     cout << "Starting main\n";
+    
     // Testing loadDB
     Network network("networkDB.txt"); // Already loadDB in the constructor
     cout << "Network created\n";
@@ -425,6 +403,36 @@ int main() {
     network.saveDB("networkDB_saved.txt");
     cout << "Saved DB\n";
 
+    // Testing Phase 2 Part 2!
+    cout << "Testing Friend Connection\n";
+
+    // Finding two people from loaded DB
+    Person* p1 = network.search("Truman", "Burbank");
+    Person* p2 = network.search("Martin", "Van Nostrand");
+
+    if (p1 != NULL && p2 != NULL) {
+        // Make them friends
+        p1->makeFriend(p2);
+        p2->makeFriend(p1);
+
+        cout << "Friendship created between: \n";
+        p1->print_person();
+        cout << endl;
+        p2->print_person();
+        cout << endl;
+
+        // Verify friend list
+        cout << "Friend lists:\n";
+
+        p1->printFriends();
+        cout << "Friend count: " << p1->getFriendCount() << endl;
+        cout << endl;
+        p2->printFriends();
+        cout << "Friend count: " << p2->getFriendCount() << endl;
+    } 
+    else {
+        cout << "Test persons not found. Check names in networkDB.txt\n";
+    }
     network.showMenu();
 
     return 0;
