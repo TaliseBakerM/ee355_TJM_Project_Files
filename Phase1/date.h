@@ -1,23 +1,25 @@
 #ifndef DATE_H
 #define DATE_H
 
+#include <iostream>
 #include <string>
+
 using namespace std;
 
-// Date class stores month, day, and year
 class Date {
 private:
-	int month;
-   int day;
-   int year;
-    
-public:
-   // Constructor (no input) and constructor that takes string (like "01/13/1961")
-	Date();
-   Date(string date_str);
+    int month;
+    int day;
+    int year;
 
-   // Returns formatted date (like "January 13, 1961")
-   string print_date() const;
+    string month_to_name() const;
+
+public:
+    Date();
+    Date(string date_str);
+
+    void print_date(string style = "Month D, YYYY") const;
+    bool operator==(const Date& rhs) const;
 };
 
 #endif

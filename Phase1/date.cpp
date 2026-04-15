@@ -1,67 +1,42 @@
 #include "date.h"
-#include <sstream> // Needed for stringstream
+
+#include <sstream>
+#include <cstdlib>
+
 using namespace std;
 
-// Default constructor
-Date::Date() {
-    month = 1;
-    day = 1;
-    year = 1900;
-}
+Date::Date() : month(1), day(1), year(1970) {}
 
-// Constructor that parses "MM/DD/YYYY" or "M/D/YYYY"
-Date::Date(string date_str) {
-    month = 1;
-    day = 1;
-    year = 1900;
-
-    // Using stringstream to read form string (like cin)
-    char slash1, slash2;
+Date::Date(string date_str) : month(1), day(1), year(1970) {
+    char slash1 = '/', slash2 = '/';
     stringstream ss(date_str);
-    ss >> month >> slash1 >> day >> slash2 >> year;
+    if (!(ss >> month >> slash1 >> day >> slash2 >> year)) {
+        month = 1;
+        day = 1;
+        year = 1970;
+    }
 }
 
-// Converts stored data into desired string format
-string Date::print_date() const {
-    string month_names[12] = {
-        "January", "February", "March", "April", "May", "June", "July",
-        "August", "September", "October", "November", "December"
+string Date::month_to_name() const {
+    static const string months[] = {
+        "", "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
     };
 
-    string result = "";
-    
-    // Convert month number to month name
     if (month >= 1 && month <= 12) {
-        result += month_names[month-1];
-    } else {
-        result += "Unknown";
+        return months[month];
     }
-    result += " ";
+    return "Invalid";
+}
 
-    // Convert day to string 
-    // Note: Got rid of leading zeros. I assumed this was fine since, as far as I could tell,
-    // the project instructions did not specify if "January 03, 1961" or "January 3, 1961"
-    // was preferred. 
-    int d = day;
-    
-    if (day >= 10) {
-        result += char('0' + d/10); // Tens place
-    } 
-    result += char('0' + d%10); // Ones place
-    result += ", ";
-
-    // Convert year to string
-    int y = year;
-    string year_str = "";
-
-    if (y == 0) {
-        year_str = "0";
+void Date::print_date(string style) const {
+    if (style == "Month D, YYYY") {
+        cout << month_to_name() << " " << day << ", " << year << endl;
     } else {
-        while (y > 0) {
-            year_str = char('0' + (y%10)) + year_str;
-            y /= 10;
-        }
+        cout << month << "/" << day << "/" << year << endl;
     }
-    result += year_str;
-    return result;
+}
+
+bool Date::operator==(const Date& rhs) const {
+    return month == rhs.month && day == rhs.day && year == rhs.year;
 }
