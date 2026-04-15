@@ -163,7 +163,7 @@ void Person::makeFriend(Person* newFriend) {
 // Uncomment and run: 
 // g++ contact.cpp date.cpp person.cpp -o test
 // ./test  
-
+/*
 int main() {
 
     cout << "---- Testing Date ----\n";
@@ -188,3 +188,4 @@ int main() {
 
     return 0;
 }
+*/
