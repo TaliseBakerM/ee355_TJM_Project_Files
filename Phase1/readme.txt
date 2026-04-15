@@ -18,6 +18,9 @@ Phone (Office) 310-192-2847
 Phone (Home) 310-192-2011
 310-192-2011
 
+
+
+
 Testing Part 2 - Date, Person class
 Note: As far as I could tell, the project manual did not describe a preference between outputting a date like "January 03, 1961" and 
 "January 3, 1961" so I assumed I could choose which to display. I decided to display the second version since I think that's more commonly used. 
@@ -27,18 +30,23 @@ g++ contact.cpp date.cpp person.cpp -o test
 ./ test
 
 Prints: 
+---- Testing Date ----
 January 13, 1961
-January 3, 1961
-Email (Work) julia@wh.gov
-Phone (Home) 310-192-2847
+January 7, 1961
 
+---- Testing Email & Phone ----
+Email (Work): veep@wh.gov
+Phone (Home): 310-192-2847
+
+---- Testing Person ----
 Louis-Dreyfus, Julia Scarlett Elizabeth
-
 January 13, 1961
+Phone (Home): 310-192-2847
+Email (Work): veep@wh.gov
 
-Phone (Home) 310-192-2847
 
-Email (Work) veep@wh.gov
+
+
 
 Testing Part 3 - Network class
 - Uncomment the code at the bottom of network.cpp and run:
