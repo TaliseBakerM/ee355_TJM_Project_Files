@@ -170,7 +170,8 @@ void Person::printFriends() const {
 }
 
 int Person::getFriendCount() const {
-    return myfriends.size();
+    //return myfriends.size();
+    return static_cast<int>(myfriends.size());
 }
 
 // Testing!

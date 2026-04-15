@@ -123,7 +123,7 @@ void Network::saveDB(string filename){
     Person* current = head;
     while (current != NULL) {
         outfile << current->l_name << ", " << current->f_name << "\n" << "\n";
-        outfile << current->birthdate->print_date() << "\n" << "\n";
+        outfile << current->birthdate->to_string() << "\n" << "\n"; // Changed print_date to to_string during debugging
         outfile << current->phone->get_contact() << "\n" << "\n";
         outfile << current->email->get_contact() << "\n" << "\n";
         current = current->next;
@@ -371,6 +371,8 @@ void Network::showMenu(){
                 else {
                     person1->makeFriend(person2);
                     person2->makeFriend(person1);
+
+                    cout << "They are now friends!\n"; // Checking
                 }
             }
         }
@@ -399,40 +401,16 @@ int main() {
     cout << "Network created\n";
     network.printDB();
     cout << "Printed DB\n";
+    
     // Testing saveDB
     network.saveDB("networkDB_saved.txt");
     cout << "Saved DB\n";
 
-    // Testing Phase 2 Part 2!
-    cout << "Testing Friend Connection\n";
-
-    // Finding two people from loaded DB
-    Person* p1 = network.search("Truman", "Burbank");
-    Person* p2 = network.search("Martin", "Van Nostrand");
-
-    if (p1 != NULL && p2 != NULL) {
-        // Make them friends
-        p1->makeFriend(p2);
-        p2->makeFriend(p1);
-
-        cout << "Friendship created between: \n";
-        p1->print_person();
-        cout << endl;
-        p2->print_person();
-        cout << endl;
-
-        // Verify friend list
-        cout << "Friend lists:\n";
-
-        p1->printFriends();
-        cout << "Friend count: " << p1->getFriendCount() << endl;
-        cout << endl;
-        p2->printFriends();
-        cout << "Friend count: " << p2->getFriendCount() << endl;
-    } 
-    else {
-        cout << "Test persons not found. Check names in networkDB.txt\n";
-    }
+    // Testing Phase 2 Part 2 w/ showMenu
+    // Select (6) when prompted by Menu and enter: Truman, Burbank, Martin, Van Nostrand
+    // Result should say "They are now friends!"
+     
+    //cout << "Testing Friend Connection\n";
     network.showMenu();
 
     return 0;
