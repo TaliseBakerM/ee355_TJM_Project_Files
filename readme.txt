@@ -102,6 +102,10 @@ but the code file for Part 1 said to not use c++11 so we used a different method
 --------------------------------------------- PHASE 2 ---------------------------------------------
 
 Testing Part 2 - Make Friends
+- Uncomment the code at the bottom of network.cpp and run:
+g++ network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
+./test
+
 Testing was done using showMenu. More specifically, when prompted by the menu, select 6 and enter:
     Truman 
     Burbank
