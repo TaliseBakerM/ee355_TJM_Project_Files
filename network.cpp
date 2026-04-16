@@ -342,7 +342,6 @@ void Network::showMenu(){
         else if (opt==6){
             // Phase 2 Part 1: Add new option in Main Menu
             // Note: Replaced count w/ person1 and person2 pointers for cleanliness
-
             cout << "Make friends: " << endl;
 
             cout << "Person 1" << endl;
