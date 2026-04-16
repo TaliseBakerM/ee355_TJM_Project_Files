@@ -1,10 +1,10 @@
-Partners:
+----------------------------------------- GROUP --------------------------------------------------
 Talise Baker-Matsuoka, bakermat@usc.edu, 7755662598
 Jessica Li, jmli@usc.edu, 4875063007
 May Syi Ang, maysyian@usc.edu, 6524773417
----
+---------------------------------------------------------------------------------------------------
 
-
+--------------------------------------------- PHASE 1 ---------------------------------------------
 
 Testing Part 1 - Contact class
 - Uncomment the code at the bottom and then run: 
@@ -18,8 +18,7 @@ Phone (Office) 310-192-2847
 Phone (Home) 310-192-2011
 310-192-2011
 
-
-
+---------------------------------------------------------------------------------------------------
 
 Testing Part 2 - Date, Person class
 Note: As far as I could tell, the project manual did not describe a preference between outputting a date like "January 03, 1961" and 
@@ -44,9 +43,7 @@ January 13, 1961
 Phone (Home): 310-192-2847
 Email (Work): veep@wh.gov
 
-
-
-
+---------------------------------------------------------------------------------------------------
 
 Testing Part 3 - Network class
 - Uncomment the code at the bottom of network.cpp and run:
@@ -99,3 +96,18 @@ Network::Network(string fileName) : Network(){
     cout << "Network loaded from " << fileName << " with " << count << " people\n";
 }
 but the code file for Part 1 said to not use c++11 so we used a different method instead to implement it in one line.
+
+---------------------------------------------------------------------------------------------------
+
+--------------------------------------------- PHASE 2 ---------------------------------------------
+
+Testing Part 2 - Make Friends
+Testing was done using showMenu. More specifically, when prompted by the menu, select 6 and enter:
+    Truman 
+    Burbank
+    Martin
+    Van Nostrand
+
+Result should say "They are now friends!"
+
+---------------------------------------------------------------------------------------------------
