@@ -15,6 +15,7 @@ class Network{
         int count; 
         Person* search(Person* searchEntry);
         Person* search(string fname, string lname);
+        Person* searchbyID(string id);
 
     public:
         Network();

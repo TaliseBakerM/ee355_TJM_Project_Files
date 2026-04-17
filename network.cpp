@@ -60,6 +60,15 @@ Person* Network::search(string fname, string lname){
 }
 
 
+Person* Network::searchbyID(string id) {
+    Person* current = head;
+    while (current != NULL) {
+        if (current->id == id) {
+            return current;
+        }
+    }
+    return NULL;
+}
 
 
 void Network::loadDB(string filename){
@@ -104,7 +113,10 @@ void Network::loadDB(string filename){
         getline(infile, friends_line);
         if (friends_line == "Friends: ") {
             while (getline(infile, friends_line) && !friends_line.empty()) {
-                newEntry->myfriends.push_back(search(friends_line)); // search by id which is codeName of fname and lname
+                Person* friendPtr = searchbyID(friends_line);
+                if (friendPtr != NULL) {
+                    newEntry->myfriends.push_back(friendPtr);
+                }
             }
         }
     }
