@@ -72,7 +72,7 @@ void Network::loadDB(string filename){
     head=NULL;
     tail=NULL;
     count=0;
-    string f_name, l_name, b_date, email_line, phone_line;
+    string f_name, l_name, b_date, email_line, phone_line, friends_line;
     while (getline(infile, f_name)) {
         // cout << "Read first name: " << f_name << "\n";
         if (f_name.empty() || f_name == "--------------------") {
@@ -94,22 +94,19 @@ void Network::loadDB(string filename){
         int pos = email_line.find(')');
         string email = email_line.substr(pos + 2); // +2 to skip the whitespace after )
         string email_type = email_line.substr(1, pos - 1);
-        // cout << "Parsed email type: " << email_type << ", email address: " << email << "\n";
-        // Parse phone_line to get phone type and phone number
         pos = phone_line.find(')');
         string phone = phone_line.substr(pos + 2);
         string phone_type = phone_line.substr(1, pos - 1);
-        // cout << "Parsed phone type: " << phone_type << ", phone number: " << phone << "\n";
         Person* newEntry = new Person(f_name, l_name, b_date, email, phone);
-        // cout << "Created new person: " << f_name << " " << l_name << "\n";
-        // cout << "  f_name: " << newEntry->f_name << "\n";
-        // cout << "  l_name: " << newEntry->l_name << "\n";
-        // cout << "  b_date: " << newEntry->birthdate->print_date() << "\n";
-        // cout << "  email: " << newEntry->email->get_contact() << "\n";
-        // cout << "  phone: " << newEntry->phone->get_contact() << "\n";
-        // cout << "About to push_front, email='" << email << "' phone='" << phone << "'\n";
         push_front(newEntry);
-        // cout << "Added new person to network\n";
+
+        // Read friends line and add friends (NEED TO EDIT)
+        getline(infile, friends_line);
+        if (friends_line == "Friends: ") {
+            while (getline(infile, friends_line) && !friends_line.empty()) {
+                newEntry->myfriends.push_back(search(friends_line)); // search by id which is codeName of fname and lname
+            }
+        }
     }
 }
 
@@ -126,6 +123,12 @@ void Network::saveDB(string filename){
         outfile << current->birthdate->to_string() << "\n" << "\n"; // Changed print_date to to_string during debugging
         outfile << current->phone->get_contact() << "\n" << "\n";
         outfile << current->email->get_contact() << "\n" << "\n";
+
+        outfile << "Friends: " << "\n" << "\n";
+        for (int i=0; i<current->myfriends.size(); i++) {
+            outfile << current->myfriends[i]->id << "\n";
+        }
+        outfile << "\n";
         current = current->next;
     }
 }

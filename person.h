@@ -8,6 +8,7 @@
 
 #include "date.h"
 #include "contact.h"
+#include "misc.h"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ private:
 
     vector<Person*> myfriends; // Phase 2 Part 2
 
-
+    string id;
 
 public:
     Person();

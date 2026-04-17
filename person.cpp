@@ -28,6 +28,7 @@ Person::Person(string f_name, string l_name, string b_date, string email, string
     // phone and email strings are in full version
     this->email = new Email("Work", email);
     this->phone = new Phone("Home", phone);
+    this->id = codeName(f_name, l_name);
 }
 
 
