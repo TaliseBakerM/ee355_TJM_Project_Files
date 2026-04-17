@@ -17,9 +17,9 @@ Person::~Person(){
 
 Person::Person(string f_name, string l_name, string b_date, string email, string phone){
     // Completed.
-    birthdate = nullptr;
-    this->phone = nullptr;
-    this->email = nullptr;
+    birthdate = NULL;
+    this->phone = NULL;
+    this->email = NULL;
 
     this->f_name = f_name;
     this->l_name = l_name;

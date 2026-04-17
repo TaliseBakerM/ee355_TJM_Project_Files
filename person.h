@@ -18,9 +18,9 @@ class Person {
 private:
     string f_name;
     string l_name;
-    Date* birthdate = nullptr;
-    Phone* phone = nullptr;
-    Email* email = nullptr;
+    Date* birthdate = NULL;
+    Phone* phone = NULL;
+    Email* email = NULL;
 
     Person* next;
     Person* prev;
