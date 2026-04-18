@@ -29,6 +29,10 @@ string Date::month_to_name() const {
     return "Invalid";
 }
 
+string Date::to_string() const {
+    return month_to_name() + " " + std::to_string(day) + ", " + std::to_string(year);
+}
+
 void Date::print_date(string style) const {
     if (style == "Month D, YYYY") {
         cout << month_to_name() << " " << day << ", " << year << endl;

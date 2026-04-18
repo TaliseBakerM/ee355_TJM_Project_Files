@@ -19,6 +19,7 @@ public:
     Date(string date_str);
 
     void print_date(string style = "Month D, YYYY") const;
+    string to_string() const;
     bool operator==(const Date& rhs) const;
 };
 

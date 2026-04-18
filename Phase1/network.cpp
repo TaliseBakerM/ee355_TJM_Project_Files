@@ -1,7 +1,8 @@
 #include "network.h"
-#include <limits>
+
 #include "misc.h"
 #include <fstream>
+#include <limits>
 
 Network::Network(){
     head = NULL;
@@ -103,7 +104,7 @@ void Network::loadDB(string filename){
         // cout << "Created new person: " << f_name << " " << l_name << "\n";
         // cout << "  f_name: " << newEntry->f_name << "\n";
         // cout << "  l_name: " << newEntry->l_name << "\n";
-        // cout << "  b_date: " << newEntry->birthday->print_date() << "\n";
+        // cout << "  b_date: " << newEntry->birthdate->print_date() << "\n";
         // cout << "  email: " << newEntry->email->get_contact() << "\n";
         // cout << "  phone: " << newEntry->phone->get_contact() << "\n";
         // cout << "About to push_front, email='" << email << "' phone='" << phone << "'\n";
@@ -122,7 +123,7 @@ void Network::saveDB(string filename){
     Person* current = head;
     while (current != NULL) {
         outfile << current->l_name << ", " << current->f_name << "\n" << "\n";
-        outfile << current->birthday->print_date() << "\n" << "\n";
+        outfile << current->birthdate->to_string() << "\n" << "\n"; // Changed print_date to to_string during debugging
         outfile << current->phone->get_contact() << "\n" << "\n";
         outfile << current->email->get_contact() << "\n" << "\n";
         current = current->next;
@@ -238,7 +239,7 @@ void Network::showMenu(){
         }
         
         // You may need these variables! Add more if you want!
-        string fname, lname, fileName, bdate;
+        string fname, lname, fileName, bdate, fname1, lname1, fname2, lname2;
         cout << "\033[2J\033[1;1H";
 
         if (opt==1){
@@ -292,7 +293,7 @@ void Network::showMenu(){
                 push_front(newPerson); // Add to the front of the list
                 cout << "Enter the birthdate (MM/DD/YYYY): ";
                 cin >> bdate;
-                newPerson->birthday = new Date(bdate);
+                newPerson->birthdate = new Date(bdate);
                 newPerson->email->set_contact();
                 newPerson->phone->set_contact();
             }
@@ -339,7 +340,7 @@ void Network::showMenu(){
         }
         else
             cout << "Nothing matched!\n";
-        
+
         cin.clear();
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cout << "\n\nPress Enter key to go back to main menu ... ";
@@ -356,15 +357,22 @@ void Network::showMenu(){
 
 int main() {
     cout << "Starting main\n";
+    
     // Testing loadDB
     Network network("networkDB.txt"); // Already loadDB in the constructor
     cout << "Network created\n";
     network.printDB();
     cout << "Printed DB\n";
+    
     // Testing saveDB
     network.saveDB("networkDB_saved.txt");
     cout << "Saved DB\n";
 
+    // Testing Phase 2 Part 2 w/ showMenu
+    // Select (6) when prompted by Menu and enter: Truman, Burbank, Martin, Van Nostrand
+    // Result should say "They are now friends!"
+     
+    //cout << "Testing Friend Connection\n";
     network.showMenu();
 
     return 0;
