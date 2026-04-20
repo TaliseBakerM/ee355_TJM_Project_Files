@@ -131,7 +131,7 @@ Result should say "They are now friends!"
 
 ---------------------------------------------------------------------------------------------------
 
-Testing Part 4 - Print Person
+Testing Part 3/4 - Person ID and Print Person
 After running the above code for part 1/2, go back to the showMenu option. 
 Select the option 5. Then type the last name 'Burbank' and it will show the newly added friend when printing his information.
 
