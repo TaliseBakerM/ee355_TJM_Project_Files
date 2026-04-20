@@ -26,7 +26,7 @@ Note: As far as I could tell, the project manual did not describe a preference b
 "January 3, 1961" so I assumed I could choose which to display. I decided to display the second version since I think that's more commonly used. 
 
 - Uncomment the code at the bottom of person.cpp and run:
-g++ contact.cpp date.cpp person.cpp -o test 
+g++ -std=c++11 contact.cpp date.cpp person.cpp -o test
 ./ test
 
 Prints: 
@@ -50,7 +50,7 @@ Email (Work): veep@wh.gov
 
 Testing Part 3 - Network class
 - Uncomment the code at the bottom of network.cpp and run:
-g++ network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
+g++ -std=c++11 network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
 ./test
 
 Prints:
