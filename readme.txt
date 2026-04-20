@@ -25,7 +25,7 @@ Note: As far as I could tell, the project manual did not describe a preference b
 "January 3, 1961" so I assumed I could choose which to display. I decided to display the second version since I think that's more commonly used. 
 
 - Uncomment the code at the bottom of person.cpp and run:
-g++ contact.cpp date.cpp person.cpp -o test 
+g++ -std=c++11 contact.cpp date.cpp person.cpp -o test 
 ./ test
 
 Prints: 
@@ -47,7 +47,7 @@ Email (Work): veep@wh.gov
 
 Testing Part 3 - Network class
 - Uncomment the code at the bottom of network.cpp and run:
-g++ network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
+g++ -std=c++11 network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
 ./test
 
 Prints:
@@ -101,9 +101,24 @@ but the code file for Part 1 said to not use c++11 so we used a different method
 
 --------------------------------------------- PHASE 2 ---------------------------------------------
 
+Testing Part 1 - Adding a new option to the Main Menu
+- Uncomment the code at the bottom of network.cpp and run:
+g++ -std=c++11 network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
+./test
+
+Test using showMenu. When promped, enter 6 and then enter:
+    Truman 
+    Burbank
+    Martin
+    Van Nostrand
+It should output their information
+
+
+---------------------------------------------------------------------------------------------------
+
 Testing Part 2 - Make Friends
 - Uncomment the code at the bottom of network.cpp and run:
-g++ network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
+g++ -std=c++11 network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
 ./test
 
 Testing was done using showMenu. More specifically, when prompted by the menu, select 6 and enter:
@@ -115,3 +130,19 @@ Testing was done using showMenu. More specifically, when prompted by the menu, s
 Result should say "They are now friends!"
 
 ---------------------------------------------------------------------------------------------------
+
+Testing Part 4 - Print Person
+After running the above code for part 1/2, go back to the showMenu option. 
+Select the option 5. Then type the last name 'Burbank' and it will show the newly added friend when printing his information.
+
+Print people with last name 
+Last name: Burbank
+Burbank, Truman
+January 17, 1962
+Phone (Home): 213-517-9989
+Email (Work): document@info.edu
+martinvannostrand (Martin Van Nostrand)
+
+---------------------------------------------------------------------------------------------------
+
+

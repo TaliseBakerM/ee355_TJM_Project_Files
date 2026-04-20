@@ -386,6 +386,10 @@ void Network::showMenu(){
                     person1->makeFriend(person2);
                     person2->makeFriend(person1);
 
+                    person1->print_person();
+                    cout << endl;
+                    person2->print_person();
+
                     cout << "They are now friends!\n"; // Checking
                 }
             }
