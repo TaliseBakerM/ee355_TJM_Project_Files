@@ -145,4 +145,21 @@ martinvannostrand (Martin Van Nostrand)
 
 ---------------------------------------------------------------------------------------------------
 
+Testing Part 5 - Sort Friends
+- Uncomment the code at the bottom of person.cpp and run:
+g++ -std=c++11 contact.cpp date.cpp misc.cpp person.cpp -o test
+./test
+
+Testing was done using the instruction manual's example friend names in order to obtain the same results and compare. Result:
+Tommy, Trojan
+--------------------------------
+Amy, Chen
+
+Karan, Kapoor
+
+Katy, Bruin
+
+Kurt, Cobain
+
+---------------------------------------------------------------------------------------------------
 
