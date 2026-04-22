@@ -167,7 +167,7 @@ void Person::makeFriend(Person* newFriend) {
 }
 
 // Phase 2 Part 5: Sorting Friends
-void Person::printFriends() const
+void Person::print_friends() const
 {
     vector<Person*> sortedFriends = myfriends;
 
@@ -233,9 +233,9 @@ int main() {
 
 // Testing for Phase 2 Part 5
 // Run: 
-// g++ -std=c++11 person.cpp misc.cpp -o test 
+// g++ -std=c++11 contact.cpp date.cpp misc.cpp person.cpp -o test
 // ./test
-
+/*
 #include <iostream>
 using namespace std;
 
@@ -263,3 +263,17 @@ int main()
 
     return 0;
 }
+*/
+
+/* 
+Result:
+Tommy, Trojan
+--------------------------------
+Amy, Chen
+
+Karan, Kapoor
+
+Katy, Bruin
+
+Kurt, Cobain
+*/
