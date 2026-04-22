@@ -43,9 +43,8 @@ public:
     bool operator!=(const Person& rhs);
 
     void makeFriend(Person* newFriend); // Phase 2 Part 2
-    // Phase 2 Part 2 Testing
-    void printFriends() const;
-    int getFriendCount() const;
+
+    void print_friends() const; // Phase 2 Part 5
 };
 
 #endif

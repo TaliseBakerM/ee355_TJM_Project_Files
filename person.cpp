@@ -1,6 +1,10 @@
 #include "person.h"
 #include <fstream>
 
+// Phase 2 Part 5
+#include <algorithm>
+#include <cctype>
+
 Person::Person(){
     // I'm already done! 
     set_person();
@@ -162,6 +166,40 @@ void Person::makeFriend(Person* newFriend) {
     myfriends.push_back(newFriend);
 }
 
+// Phase 2 Part 5: Sorting Friends
+void Person::printFriends() const
+{
+    vector<Person*> sortedFriends = myfriends;
+
+    sort(sortedFriends.begin(), sortedFriends.end(),
+        [](const Person* a, const Person* b)
+        {
+            string ac = a->id;
+            string bc = b->id;
+
+            // Compare first letter
+            char a1 = (ac.size() > 0) ? tolower(ac[0]) : '\0';
+            char b1 = (bc.size() > 0) ? tolower(bc[0]) : '\0';
+            if (a1 != b1) return a1 < b1;
+
+            // Compare second letter
+            char a2 = (ac.size() > 1) ? tolower(ac[1]) : '\0';
+            char b2 = (bc.size() > 1) ? tolower(bc[1]) : '\0';
+            if (a2 != b2) return a2 < b2;
+
+            // If both letters match, any order is allowed
+            return ac < bc;
+        });
+
+    cout << "--------------------------------" << endl << endl;
+
+    for (size_t i = 0; i < sortedFriends.size(); i++)
+    {
+        cout << sortedFriends[i]->f_name << ", "
+             << sortedFriends[i]->l_name << endl << endl;
+    }
+}
+
 // Testing!
 // Uncomment and run: 
 // g++ contact.cpp date.cpp person.cpp -o test
@@ -192,3 +230,36 @@ int main() {
     return 0;
 }
 */
+
+// Testing for Phase 2 Part 5
+// Run: 
+// g++ -std=c++11 person.cpp misc.cpp -o test 
+// ./test
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    // Create the main person using the 5-argument constructor
+    Person tommy("Tommy", "Trojan", "01/13/1961", "tommy@usc.edu", "310-555-0100");
+
+    // Create friends
+    Person karan("Karan", "Kapoor", "01/01/2000", "karan@usc.edu", "310-555-0101");
+    Person katy("Katy", "Bruin", "01/01/2000", "katy@usc.edu", "310-555-0102");
+    Person amy("Amy", "Chen", "01/01/2000", "amy@usc.edu", "310-555-0103");
+    Person kurt("Kurt", "Cobain", "01/01/2000", "kurt@usc.edu", "310-555-0104");
+
+    // Add friends 
+    tommy.makeFriend(&karan);
+    tommy.makeFriend(&katy);
+    tommy.makeFriend(&amy);
+    tommy.makeFriend(&kurt);
+
+    cout << "Tommy, Trojan" << endl;
+
+    // Call print_friends function
+    tommy.print_friends();
+
+    return 0;
+}
