@@ -163,3 +163,11 @@ Kurt, Cobain
 
 ---------------------------------------------------------------------------------------------------
 
+Testing Part 6 - Adding a new search method to the Main Menu
+- Uncomment the code at the bottom of network.cpp and run:
+g++ -std=c++11 network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
+./test
+
+Testing was done using showMenu. When prompted, choose 7 and enter:
+    
+Result should
