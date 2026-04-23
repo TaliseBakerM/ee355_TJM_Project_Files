@@ -414,6 +414,15 @@ void Network::showMenu(){
                 else {
                     Date inputDate(input); // If user input birthday as MM/DD/YYYY or M/D/YYYY
                     if (*current->birthdate == inputDate) {found = true;}
+                    else {
+                        string phone_digits = ""; // If user input phone number without dashes.
+                        for (int i = 0; i < current->phone->get_contact("short").size(); i++) {
+                            if (current->phone->get_contact("short")[i] != '-') {
+                                phone_digits += current->phone->get_contact("short")[i];
+                            }
+                        }
+                        if (phone_digits == input) {found = true;}
+                    }
                 }
                 if (found) {
                     current->print_person();

@@ -169,5 +169,43 @@ g++ -std=c++11 network.cpp contact.cpp date.cpp misc.cpp person.cpp -o test
 ./test
 
 Testing was done using showMenu. When prompted, choose 7 and enter:
-    
-Result should
+    7/24/1949
+Result should show:
+    Van Nostrand, Martin
+    July 24, 1949
+    Phone (Home): 224-432-5809
+    Email (Work): myemail@yahoo.com
+
+Other inputs and expected outputs:
+    Enter: document@info.edu
+    Results: Burbank, Truman
+             January 17, 1962
+             Phone (Home): 213-517-9989
+             Email (Work): document@info.edu
+
+    Or
+    Enter: 224-432-5809
+    Results: Van Nostrand, Martin
+             July 24, 1949
+             Phone (Home): 224-432-5809
+             Email (Work): myemail@yahoo.com
+    Or
+    Enter: 3102917482
+    Results: Louis-Dreyfus, Julia Scarlett Elizabeth
+             January 13, 1961
+             Phone (Home): 310-291-7482
+             Email (Work): something@email.com
+
+This function works for the following inputs:
+1. First name
+2. Last name
+3. Phone number with or without dashes
+4. Birthdate in words (e.g. January 1, 1941)
+5. Birthdate in MM/DD/YYYY or M/D/YYYY format
+6. Complete email address
+
+This function does not work for the following inputs (non-exhaustive list):
+1. First and last name combined
+2. Phone number with brackets
+3. Other iterations of birthdate (e.g. January 1 1941)
+4. Partial email address
