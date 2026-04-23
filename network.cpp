@@ -242,6 +242,7 @@ void Network::showMenu(){
         cout << "4. Remove a person \n";
         cout << "5. Print people with last name  \n";
         cout << "6. Connect  \n";
+        cout << "7. Wise Search \n";
         cout << "\nSelect an option ... ";
         
         if (cin >> opt) {
@@ -392,6 +393,32 @@ void Network::showMenu(){
 
                     cout << "They are now friends!\n"; // Checking
                 }
+            }
+        }
+        else if (opt == 7) {
+            // Phase 2 Part 6: Wise Search
+            cout << "Wise Search \n";
+            cout << "\nSearch By: \n";
+            string input;
+            getline(cin, input);
+            
+            bool found = false;
+            Person* current = head;
+            while (current != NULL) {
+                // Check if input matches first name, last name, phone, email, or birth date
+                if (current->f_name == input) { found = true;}
+                else if (current->l_name == input) { found = true;}
+                else if (current->phone->get_contact() == input) { found = true;}
+                else if (current->email->get_contact() == input) { found = true;}
+                else if (current->birthdate->to_string() == input) { found = true;}
+                if (found) {
+                    current->print_person();
+                    break;
+                }
+                current = current->next;
+            }
+            if (!found) {
+                cout << "Person not found\n";
             }
         }
         else
