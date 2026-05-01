@@ -1,0 +1,72 @@
+Julia Scarlett Elizabeth
+Louis-Dreyfus
+1/13/1961
+(Gmail) something@email.com
+(Office) 310-291-7482
+--------------------
+Martin
+Van Nostrand
+07/24/1949
+(Yahoo) myemail@yahoo.com
+(Home) 2244325809
+--------------------
+Truman
+Burbank
+1/17/1962
+(Official) document@info.edu
+(Work) 2135179989
+--------------------
+Alex
+Kim
+3/15/2002
+(Work) alex.kim@usc.edu
+(Cell) 213-444-0011
+--------------------
+Jordan
+Patel
+8/22/2001
+(School) jordan.patel@usc.edu
+(Home) 310-555-0202
+--------------------
+Casey
+Nguyen
+5/10/2002
+(Work) casey.nguyen@usc.edu
+(Cell) 424-555-0303
+--------------------
+Riley
+Chen
+11/3/2001
+(School) riley.chen@usc.edu
+(Home) 213-555-0404
+--------------------
+Morgan
+Williams
+2/28/2003
+(Work) morgan.w@usc.edu
+(Cell) 310-555-0505
+--------------------
+Drew
+Martinez
+9/14/2001
+(School) drew.martinez@usc.edu
+(Home) 424-555-0606
+--------------------
+Taylor
+Robinson
+4/7/2002
+(Work) taylor.rob@usc.edu
+(Cell) 213-555-0707
+--------------------
+Sam
+Johnson
+12/19/2001
+(School) sam.j@usc.edu
+(Home) 310-555-0808
+--------------------
+Jamie
+Lee
+7/30/2002
+(Work) jamie.lee@usc.edu
+(Cell) 424-555-0909
+--------------------
