@@ -1,0 +1,29 @@
+[ATTRIBUTES]
+cleanliness=5
+college=USC
+major=Business Administration
+sleep=early bird
+state=CA
+year=Sophomore
+zip=90089
+[PREFERENCES]
+guests ok
+early bird
+social atmosphere
+[WEIGHTS]
+cleanliness=2
+pets=3
+quiet=2
+smoking=3
+social=5
+studious=2
+[HOBBIES]
+cooking
+dancing
+gym
+travel
+[DEALBREAKERS]
+no guests
+[LOG]
+Profile created interactively
+[END]

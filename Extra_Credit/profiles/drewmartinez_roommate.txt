@@ -1,0 +1,32 @@
+[ATTRIBUTES]
+cleanliness=8
+college=USC
+major=Electrical Engineering
+sleep=night owl
+state=CA
+year=Junior
+zip=90007
+[PREFERENCES]
+quiet hours
+no smoking
+studious environment
+night owl
+[WEIGHTS]
+cleanliness=4
+pets=2
+quiet=4
+smoking=5
+social=3
+studious=5
+[HOBBIES]
+chess
+guitar
+hiking
+programming
+reading
+[DEALBREAKERS]
+loud music after midnight
+smoker
+[LOG]
+Profile created interactively
+[END]

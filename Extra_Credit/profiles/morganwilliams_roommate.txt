@@ -1,0 +1,31 @@
+[ATTRIBUTES]
+cleanliness=6
+college=USC
+major=Psychology
+sleep=night owl
+state=CA
+year=Sophomore
+zip=90007
+[PREFERENCES]
+pets ok
+night owl
+guests ok
+social atmosphere
+[WEIGHTS]
+cleanliness=3
+pets=5
+quiet=2
+smoking=4
+social=5
+studious=2
+[HOBBIES]
+art
+cooking
+hiking
+music
+yoga
+[DEALBREAKERS]
+no pets
+[LOG]
+Profile created interactively
+[END]

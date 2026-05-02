@@ -1,0 +1,31 @@
+[ATTRIBUTES]
+cleanliness=7
+college=USC
+major=Computer Science
+sleep=night owl
+state=WA
+year=Junior
+zip=90007
+[PREFERENCES]
+quiet hours
+no smoking
+night owl
+studious environment
+[WEIGHTS]
+cleanliness=4
+pets=3
+quiet=4
+smoking=5
+social=3
+studious=4
+[HOBBIES]
+gaming
+hiking
+photography
+programming
+[DEALBREAKERS]
+smoker
+parties on weekdays
+[LOG]
+Profile created interactively
+[END]

@@ -1,0 +1,30 @@
+[ATTRIBUTES]
+cleanliness=4
+college=USC
+major=Film Studies
+sleep=night owl
+state=NY
+year=Sophomore
+zip=90028
+[PREFERENCES]
+guests ok
+social atmosphere
+night owl
+[WEIGHTS]
+cleanliness=2
+pets=3
+quiet=2
+smoking=3
+social=5
+studious=1
+[HOBBIES]
+film
+gaming
+music
+travel
+writing
+[DEALBREAKERS]
+no guests
+[LOG]
+Profile created interactively
+[END]

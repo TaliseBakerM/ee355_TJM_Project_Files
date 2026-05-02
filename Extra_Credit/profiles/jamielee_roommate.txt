@@ -1,0 +1,31 @@
+[ATTRIBUTES]
+cleanliness=6
+college=USC
+major=Architecture
+sleep=early bird
+state=CA
+year=Senior
+zip=90089
+[PREFERENCES]
+early bird
+no smoking
+pets ok
+guests ok
+[WEIGHTS]
+cleanliness=3
+pets=4
+quiet=3
+smoking=4
+social=4
+studious=3
+[HOBBIES]
+cooking
+drawing
+gym
+running
+travel
+[DEALBREAKERS]
+smoker
+[LOG]
+Profile created interactively
+[END]

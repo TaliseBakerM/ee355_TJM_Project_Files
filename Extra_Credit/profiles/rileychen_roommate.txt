@@ -1,0 +1,32 @@
+[ATTRIBUTES]
+cleanliness=9
+college=USC
+major=Biomedical Engineering
+sleep=early bird
+state=CA
+year=Senior
+zip=90007
+[PREFERENCES]
+quiet hours
+no smoking
+early bird
+no guests
+[WEIGHTS]
+cleanliness=5
+pets=1
+quiet=5
+smoking=5
+social=1
+studious=5
+[HOBBIES]
+baking
+painting
+running
+yoga
+[DEALBREAKERS]
+loud music after midnight
+smoker
+parties on weekdays
+[LOG]
+Profile created interactively
+[END]
