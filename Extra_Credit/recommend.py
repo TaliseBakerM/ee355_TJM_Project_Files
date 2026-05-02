@@ -9,14 +9,13 @@ Usage:
 Pipeline:
     1. Load and preprocess profiles exported by C++ (exportCSV)
     2. Content-Based Filtering  — cosine similarity on encoded features
-    3. Collaborative Filtering  — SVD matrix factorization on synthetic
-                                  interaction matrix (from C++ friend graph)
+    3. Collaborative Filtering  — SVD matrix factorization on synthetic interaction matrix (from C++ friend graph)
     4. Hybrid model             — weighted blend of (2) and (3)
     5. Evaluation               — 90/10 train/test split, Precision@K, RMSE
-    6. Output                   — recommendations.csv  (C++ can reload this)
+    6. Output                   — recommendations.csv (C++ can reload this)
 
 STL containers used on C++ side (referenced in comments):
-    map, vector, deque, list, set, unordered_map
+map, vector, deque, list, set, unordered_map
 """
 
 import sys
@@ -34,9 +33,7 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-# ─────────────────────────────────────────────────────────────
 # 0.  Helpers
-# ─────────────────────────────────────────────────────────────
 
 RANDOM_SEED = 42
 random.seed(RANDOM_SEED)
@@ -49,9 +46,7 @@ def banner(title: str):
     print("=" * width)
 
 
-# ─────────────────────────────────────────────────────────────
 # 1.  Load & preprocess
-# ─────────────────────────────────────────────────────────────
 
 def load_profiles(csv_path: str) -> pd.DataFrame:
     """Load the CSV exported by Network::exportCSV()."""
@@ -108,9 +103,7 @@ def preprocess(df: pd.DataFrame):
     return person_ids, feature_matrix, df_enc.columns.tolist()
 
 
-# ─────────────────────────────────────────────────────────────
 # 2.  Content-Based Filtering
-# ─────────────────────────────────────────────────────────────
 
 def content_based(person_ids, feature_matrix):
     """
@@ -128,12 +121,10 @@ def top_k_content(sim_df, person_id, k=3):
     if person_id not in sim_df.index:
         return []
     row = sim_df.loc[person_id].sort_values(ascending=False)
-    return list(row.head(k).items())   # [(id, score), ...]
+    return list(row.head(k).items()) # [(id, score), ...]
 
 
-# ─────────────────────────────────────────────────────────────
 # 3.  Collaborative Filtering (SVD)
-# ─────────────────────────────────────────────────────────────
 
 def build_interaction_matrix(person_ids, sim_df, noise_level=0.15):
     """
@@ -148,16 +139,16 @@ def build_interaction_matrix(person_ids, sim_df, noise_level=0.15):
     """
     n = len(person_ids)
     # Pull raw similarity as base "true compatibility"
-    base = sim_df.values.copy()                         # shape (n, n)
+    base = sim_df.values.copy() # shape (n, n)
     noise = np.random.normal(0, noise_level, base.shape)
     ratings_raw = np.clip(base + noise, 0.0, 1.0)
 
     # Only "observe" ~40% of pairs (simulate missing data)
     mask = np.random.rand(n, n) < 0.40
-    np.fill_diagonal(mask, False)                       # no self-ratings
+    np.fill_diagonal(mask, False) # no self-ratings
     ratings_observed = np.where(mask, ratings_raw, 0.0)
 
-    # Scale 0-1 → 1-5
+    # Scale 0-1 to 1-5
     ratings_scaled = ratings_observed * 4.0 + 1.0
     ratings_scaled = np.where(mask, ratings_scaled, 0.0)
 
@@ -175,15 +166,13 @@ def collaborative_svd(rating_df, mask, n_components=None):
         n_components = max(1, min(n - 1, 5))
 
     svd = TruncatedSVD(n_components=n_components, random_state=RANDOM_SEED)
-    U = svd.fit_transform(rating_df.values)    # (n x k)
-    Vt = svd.components_                       # (k x n)
-    pred_matrix = U @ Vt                       # (n x n) reconstructed
+    U = svd.fit_transform(rating_df.values) # (n x k)
+    Vt = svd.components_ # (k x n)
+    pred_matrix = U @ Vt # (n x n) reconstructed
 
     # Re-scale to [1, 5] range
     pred_matrix = np.clip(pred_matrix, 1.0, 5.0)
-    pred_df = pd.DataFrame(pred_matrix,
-                           index=rating_df.index,
-                           columns=rating_df.columns)
+    pred_df = pd.DataFrame(pred_matrix, index=rating_df.index, columns=rating_df.columns)
     # Normalize to [0, 1] for blending
     pred_norm = (pred_df - 1.0) / 4.0
     return pred_norm, svd.explained_variance_ratio_.sum()
@@ -199,9 +188,7 @@ def top_k_collab(pred_df, person_id, k=3):
     return list(row_sorted.head(k).items())
 
 
-# ─────────────────────────────────────────────────────────────
 # 4.  Hybrid Model
-# ─────────────────────────────────────────────────────────────
 
 def hybrid_score(sim_df, pred_df, alpha=0.55):
     """
@@ -227,9 +214,7 @@ def top_k_hybrid(hybrid_df, person_id, k=3):
     return list(row.head(k).items())
 
 
-# ─────────────────────────────────────────────────────────────
 # 5.  Evaluation
-# ─────────────────────────────────────────────────────────────
 
 def evaluate(rating_df, mask, pred_norm_df, k=3):
     """
@@ -262,15 +247,15 @@ def evaluate(rating_df, mask, pred_norm_df, k=3):
     # Collect true vs predicted on test set
     y_true, y_pred = [], []
     for (i, j) in test_pairs:
-        true_rating = rating_df.iloc[i, j]          # 1-5 scale
-        pred_rating = pred_norm_df.iloc[i, j] * 4.0 + 1.0  # back to 1-5
+        true_rating = rating_df.iloc[i, j] # 1-5 scale
+        pred_rating = pred_norm_df.iloc[i, j] * 4.0 + 1.0 # back to 1-5
         y_true.append(true_rating)
         y_pred.append(pred_rating)
 
     rmse = math.sqrt(mean_squared_error(y_true, y_pred))
 
     # Precision@K — for each user in test, fraction of top-K recs that are relevant
-    relevant_threshold = 3.5   # on 1-5 scale
+    relevant_threshold = 3.5 # on 1-5 scale
     precision_scores = []
     for pid in person_ids:
         # Get top-K predictions for this user
@@ -292,8 +277,8 @@ def evaluate(rating_df, mask, pred_norm_df, k=3):
     precision_at_k = sum(precision_scores) / len(precision_scores) if precision_scores else 0.0
 
     print(f"\n  Evaluation (90/10 split, {len(train_pairs)} train / {len(test_pairs)} test pairs)")
-    print(f"  RMSE          : {rmse:.4f}  (lower is better; scale 1-5)")
-    print(f"  Precision@{k}  : {precision_at_k:.4f}  (higher is better; 0-1)")
+    print(f"  RMSE : {rmse:.4f} (lower is better; scale 1-5)")
+    print(f"  Precision@{k} : {precision_at_k:.4f} (higher is better; 0-1)")
 
 
 # ─────────────────────────────────────────────────────────────
@@ -315,10 +300,10 @@ def save_recommendations(hybrid_df, output_path="recommendations.csv", k=3):
         top_k = row.nlargest(k)
         for rank, (rec_id, score) in enumerate(top_k.items(), start=1):
             rows.append({
-                "person_id":      pid,
-                "rank":           rank,
+                "person_id": pid,
+                "rank": rank,
                 "recommended_id": rec_id,
-                "hybrid_score":   round(score, 4)
+                "hybrid_score": round(score, 4)
             })
 
     out_df = pd.DataFrame(rows)
@@ -347,23 +332,23 @@ def print_recommendations(hybrid_df, content_df, collab_df, k=3):
 # ─────────────────────────────────────────────────────────────
 
 def main():
-    # ── Argument handling ──────────────────────────────────────
+    # Argument handling
     if len(sys.argv) < 2:
         # Try default path if run without args
         csv_path = "profiles.csv"
         if not os.path.exists(csv_path):
             print("Usage: python3 recommend.py <profiles.csv>")
-            print("  (Generate profiles.csv from the C++ menu option 9)")
+            print("(Generate profiles.csv from the C++ menu option 9)")
             sys.exit(1)
     else:
         csv_path = sys.argv[1]
 
     print("\n" + "=" * 60)
-    print("  RoomieFinder — ML Recommendation Engine")
-    print("  Phase 3 | USC EE 355 Network Project")
+    print("RoomieFinder — ML Recommendation Engine")
+    print("Phase 3 | USC EE 355 Network Project")
     print("=" * 60)
 
-    # ── Step 1: Load ───────────────────────────────────────────
+    # Step 1: Load 
     banner("Step 1: Loading Profiles")
     df = load_profiles(csv_path)
     if len(df) < 2:
@@ -372,40 +357,40 @@ def main():
 
     person_ids, feature_matrix, feature_names = preprocess(df)
 
-    # ── Step 2: Content-Based ──────────────────────────────────
+    # Step 2: Content-Based
     banner("Step 2: Content-Based Filtering (Cosine Similarity)")
     content_sim_df = content_based(person_ids, feature_matrix)
-    print("  Sample content similarities:")
+    print("Sample content similarities:")
     pid0 = person_ids[0]
     for pid, score in top_k_content(content_sim_df, pid0, k=3):
         print(f"    {pid0} <-> {pid}: {score:.4f}")
 
-    # ── Step 3: Collaborative Filtering ───────────────────────
+    # Step 3: Collaborative Filtering
     banner("Step 3: Collaborative Filtering (SVD)")
     rating_df, mask = build_interaction_matrix(person_ids, content_sim_df)
-    print(f"  Interaction matrix: {rating_df.shape}, "
+    print(f"Interaction matrix: {rating_df.shape}, "
           f"observed pairs: {mask.sum()}")
 
     collab_pred_df, var_explained = collaborative_svd(rating_df, mask)
-    print(f"  SVD variance explained: {var_explained:.2%}")
-    print("  Sample collaborative scores:")
+    print(f"SVD variance explained: {var_explained:.2%}")
+    print("Sample collaborative scores:")
     for pid, score in top_k_collab(collab_pred_df, pid0, k=3):
         print(f"    {pid0} <-> {pid}: {score:.4f}")
 
-    # ── Step 4: Hybrid ─────────────────────────────────────────
+    # Step 4: Hybrid
     banner("Step 4: Hybrid Model (alpha=0.55 content, 0.45 collaborative)")
     hybrid_df = hybrid_score(content_sim_df, collab_pred_df, alpha=0.55)
 
-    # ── Step 5: Evaluation ─────────────────────────────────────
+    # Step 5: Evaluation 
     banner("Step 5: Evaluation")
     evaluate(rating_df, mask, collab_pred_df, k=3)
 
-    # ── Step 6: Output ─────────────────────────────────────────
+    # Step 6: Output
     print_recommendations(hybrid_df, content_sim_df, collab_pred_df, k=3)
     out_df = save_recommendations(hybrid_df, "recommendations.csv", k=3)
 
     print("\n" + "=" * 60)
-    print("  Done! Load recommendations.csv into C++ or inspect it directly.")
+    print("Done! Load recommendations.csv into C++ or inspect it directly.")
     print("=" * 60 + "\n")
 
 

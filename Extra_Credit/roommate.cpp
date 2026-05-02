@@ -4,9 +4,7 @@
 #include <algorithm>
 #include <cmath>
 
-// ─────────────────────────────────────────────
 // Constructors
-// ─────────────────────────────────────────────
 
 RoommateProfile::RoommateProfile() {
     // Default weights — user can override
@@ -22,9 +20,7 @@ RoommateProfile::RoommateProfile(string filename) : RoommateProfile() {
     load(filename);
 }
 
-// ─────────────────────────────────────────────
 // File I/O
-// ─────────────────────────────────────────────
 
 /*
   File format (section headers are literal strings):
@@ -142,9 +138,7 @@ void RoommateProfile::save(ofstream& out) const {
     out << "[END]\n";
 }
 
-// ─────────────────────────────────────────────
 // Print
-// ─────────────────────────────────────────────
 
 void RoommateProfile::print() const {
     cout << "  -- Roommate Profile --\n";
@@ -195,9 +189,7 @@ void RoommateProfile::print() const {
     }
 }
 
-// ─────────────────────────────────────────────
 // Mutators
-// ─────────────────────────────────────────────
 
 void RoommateProfile::add_attribute(string key, string value) {
     attributes[key] = value;
@@ -229,9 +221,7 @@ void RoommateProfile::set_weight(string key, int weight) {
     pref_weights[key] = weight;
 }
 
-// ─────────────────────────────────────────────
 // Compatibility Scoring
-// ─────────────────────────────────────────────
 
 /*
   Scoring breakdown (total 100 pts):
@@ -245,7 +235,7 @@ void RoommateProfile::set_weight(string key, int weight) {
 int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
     double score = 0.0;
 
-    // ── 1. Attribute matching (40 pts) ──
+    // 1. Attribute matching (40 pts)
     // Weighted attribute matches
     struct AttrWeight { string key; double pts; };
     AttrWeight attr_weights[] = {
@@ -270,7 +260,7 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
         }
     }
 
-    // ── 2. Shared hobbies (20 pts) ──
+    // 2. Shared hobbies (20 pts)
     int shared_hobbies = 0;
     int total_hobbies = 0;
     for (list<string>::const_iterator it = hobbies.begin(); it != hobbies.end(); ++it) {
@@ -284,7 +274,7 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
         score += 20.0 * ((double)shared_hobbies / total_hobbies);
     }
 
-    // ── 3. Dealbreaker conflict penalty (-30 pts max) ──
+    // 3. Dealbreaker conflict penalty (-30 pts max)
     // If any of my dealbreakers appear in their preferences, penalize
     for (set<string>::const_iterator it = dealbreakers.begin(); it != dealbreakers.end(); ++it) {
         for (size_t j = 0; j < other.preferences.size(); j++) {
@@ -302,7 +292,7 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
         }
     }
 
-    // ── 4. Weighted preference overlap (30 pts) ──
+    // 4. Weighted preference overlap (30 pts)
     // For each shared preference key, add weighted score
     double weight_score = 0.0;
     double max_weight_score = 0.0;
@@ -338,9 +328,7 @@ bool RoommateProfile::operator>(const RoommateProfile& other) const {
            (other.attributes.size() + other.hobbies.size() + other.preferences.size());
 }
 
-// ─────────────────────────────────────────────
 // CSV export for Python ML pipeline
-// ─────────────────────────────────────────────
 
 string RoommateProfile::csv_header() {
     return "person_id,college,major,year,state,zip,sleep,cleanliness,"
