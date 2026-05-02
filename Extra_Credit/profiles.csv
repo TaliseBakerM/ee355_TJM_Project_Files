@@ -1,0 +1,9 @@
+person_id,college,major,year,state,zip,sleep,cleanliness,w_quiet,w_cleanliness,w_social,w_studious,w_pets,w_smoking,n_hobbies,n_preferences,n_dealbreakers,pref_quiet_hours,pref_no_smoking,pref_pets_ok,pref_early_bird,pref_night_owl
+jamielee,USC,Architecture,Senior,CA,90089,early bird,6,3,3,4,3,4,4,5,4,1,0,1,1,1,0
+samjohnson,USC,Computer Science,Junior,WA,90007,night owl,7,4,4,3,4,3,5,4,4,2,1,1,0,0,1
+taylorrobinson,USC,Film Studies,Sophomore,NY,90028,night owl,4,2,2,5,1,3,3,5,3,1,0,0,0,0,1
+drewmartinez,USC,Electrical Engineering,Junior,CA,90007,night owl,8,4,4,3,5,2,5,5,4,2,1,1,0,0,1
+morganwilliams,USC,Psychology,Sophomore,CA,90007,night owl,6,2,3,5,2,5,4,5,4,1,0,0,1,0,1
+rileychen,USC,Biomedical Engineering,Senior,CA,90007,early bird,9,5,5,1,5,1,5,4,4,3,1,1,0,1,0
+jordanpatel,USC,Computer Science,Junior,CA,90007,night owl,7,4,3,3,4,4,5,4,4,1,1,1,1,0,1
+alexkim,USC,Electrical Engineering,Junior,CA,90007,night owl,8,5,4,2,5,2,5,4,3,2,1,1,0,0,0
