@@ -46,6 +46,27 @@ Testing:
    last name=Louis-Dreyfus
    profiles=3
  
+Before funning python script, must use 8 then 4 to export the data to a csv file (profiles.csv)
 Compile python portion with:
 pip3 install scikit-learn pandas numpy scipy
 python3 recommend.py profiles.csv
+
+^ This code will output recommendations.csv
+
+Resources used for recommend.py:
+sklearn code:
+- https://scikit-learn.org/stable/modules/preprocessing.html
+- https://www.geeksforgeeks.org/machine-learning/data-pre-processing-wit-sklearn-using-standard-and-minmax-scaler/ 
+- https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html
+
+cosine similarity code with sklearn:
+- https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html
+A super helpful source which was the inspiration
+- https://fritz.ai/recommender-systems-with-python/
+
+truncatedSVD methods:
+- https://towardsdatascience.com/a-complete-guide-to-recommender-system-tutorial-with-sklearn-surprise-keras-recommender-5e52e8ceace1/ 
+- https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html
+
+more info on recommendation systems:
+- https://medium.com/@m_n_malaeb/recall-and-precision-at-k-for-recommender-systems-618483226c54 
