@@ -1,18 +1,14 @@
 """
 recommend.py -- Phase 3 Roommate Recommendation System
-=======================================================
-USC EE 355 / Network Project Phase 3
 
-Usage:
-    python3 recommend.py <profiles.csv>
-
-Pipeline:
-    1. Load and preprocess profiles exported by C++ (exportCSV)
-    2. Content-Based Filtering -- cosine similarity on encoded features
-    3. Collaborative Filtering -- SVD matrix factorization on synthetic interaction matrix (from C++ friend graph)
-    4. Hybrid model -- weighted blend of (2) and (3)
-    5. Evaluation -- 90/10 train/test split, Precision@K, RMSE
-    6. Output -- recommendations.csv (C++ can reload this)
+- Load user profiles from CSV
+- Convert profile data into num. features
+- Compute similarity using:
+    - Content-based filtering (cosine similarity)
+    - Collaborative filtering (SVD on interaction matrix)
+- Combine both into a recommender
+- Evaluate model performance (RMSE, Precision@K)
+- Output recommendations to CSV (recommendations.csv) 
 
 STL containers used on C++ side (referenced in comments):
     map, vector, deque, list, set, unordered_map
@@ -33,10 +29,9 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-# ----------------------------------------------------------------
-# 0.  Helpers
-# ----------------------------------------------------------------
+# Helpers
 
+# Set fixed random seed for reproduceability 
 RANDOM_SEED = 42
 random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
@@ -48,53 +43,56 @@ def banner(title):
     print("=" * width)
 
 
-# ----------------------------------------------------------------
-# 1.  Load & preprocess
-# ----------------------------------------------------------------
-
+# Load/pre-process
 def load_profiles(csv_path):
-    """Read the CSV that Network::exportCSV() spits out."""
+    # Load CSV exported from C++ program
+    # Treat everything as strings initially
     df = pd.read_csv(csv_path, dtype=str)
-    df.fillna("", inplace=True)
+    df.fillna("", inplace=True) # Replace missing vals w/ empty strings
     print("  Loaded {} profiles from {}".format(len(df), csv_path))
+    
     return df
 
 
 def preprocess(df):
-    """
-    Turn raw profile fields into a numeric feature matrix.
-
-    Categorical columns (college, major, year, state, sleep) get
-    label-encoded. Numeric columns (weights, counts, cleanliness)
-    get scaled to [0, 1]. Binary pref flags are left as 0/1.
-    """
+    
+    # Turn raw profile fields into a numeric matrix.
+    # Categorical columns (college, major, year, state, sleep) get encoded 
+    # Numeric columns (weights, counts, cleanliness) get scaled to [0, 1]
+    # Binary pref flags are left as 0/1
+    
     df_enc = pd.DataFrame(index=df.index)
 
-    # label-encode the categorical stuff
+    # Encode the categorical stuff
     cat_cols = ["college", "major", "year", "state", "sleep"]
+
     for col in cat_cols:
         le = LabelEncoder()
         df_enc[col] = le.fit_transform(df[col])
 
-    # scale numeric columns to [0, 1]
+    # Normalize numeric columns to [0, 1]
     num_cols = [
         "w_quiet", "w_cleanliness", "w_social", "w_studious", "w_pets", "w_smoking",
         "n_hobbies", "n_preferences", "n_dealbreakers", "cleanliness"
     ]
+
     for col in num_cols:
         df_enc[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
+    # Scale to [0,1] so no feature dominates
     scaler = MinMaxScaler()
     df_enc[num_cols] = scaler.fit_transform(df_enc[num_cols])
 
-    # binary pref flags -- already 0 or 1, just make sure they're numeric
+    # Binary pref flags -- already 0 or 1, just make sure they're numeric
     bin_cols = [
         "pref_quiet_hours", "pref_no_smoking", "pref_pets_ok",
         "pref_early_bird", "pref_night_owl"
     ]
+
     for col in bin_cols:
         df_enc[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
+    # Extract IDs and final feature matrix
     person_ids = df["person_id"].tolist()
     feature_matrix = df_enc.values.astype(float)
 
@@ -102,55 +100,48 @@ def preprocess(df):
     return person_ids, feature_matrix, df_enc.columns.tolist()
 
 
-# ----------------------------------------------------------------
-# 2.  Content-Based Filtering
-# ----------------------------------------------------------------
-
+# Content-based filtering
 def content_based(person_ids, feature_matrix):
-    """
-    Pairwise cosine similarity across all profiles.
-    Returns an N x N DataFrame (diagonal zeroed out so nobody
-    gets matched with themselves).
-    """
+    
+    # Compute pairwise cosine similarity across all profiles.
+    # Returns an N x N DataFrame (diagonal zeroed out so nobody gets matched with themselves).
+    
     sim_matrix = cosine_similarity(feature_matrix).copy()
-    np.fill_diagonal(sim_matrix, 0.0)
+    np.fill_diagonal(sim_matrix, 0.0) # Prevent self-matching
     sim_df = pd.DataFrame(sim_matrix, index=person_ids, columns=person_ids)
+    
     return sim_df
 
 
 def top_k_content(sim_df, person_id, k=3):
-    """Top-k most similar people by content similarity."""
+    # Return top-k (default of top 3) most similar people by content similarity
     if person_id not in sim_df.index:
         return []
     row = sim_df.loc[person_id].sort_values(ascending=False)
-    return list(row.head(k).items())   # [(id, score), ...]
+    return list(row.head(k).items())   # [(id, similarity score), ...]
 
 
-# ----------------------------------------------------------------
-# 3.  Collaborative Filtering (SVD)
-# ----------------------------------------------------------------
-
+# Collaborative Filtering (SVD)
 def build_interaction_matrix(person_ids, sim_df, noise_level=0.15):
-    """
-    Build a synthetic ratings matrix to give SVD something to work with.
 
-    In a real deployment the C++ side would export actual friend/rating
-    data. Here we fake it by starting from content similarity scores,
-    adding some Gaussian noise (to simulate real human variability),
-    then scaling to 1-5 stars. We also only "observe" ~40% of pairs
-    to simulate the missing-data problem you'd have in practice.
-    """
+    # Build a synthetic ratings matrix to give SVD something to work with.
+
+    # In a real deployment the C++ side would export actual friend/rating data.
+    # Here we fake it by starting from content similarity scores, adding some 
+    # Gaussian noise (to simulate real human variability), then scaling to 1-5 stars.
+    # We also only "observe" ~40% of pairs to simulate real missing-data problem.
+
     n = len(person_ids)
-    base = sim_df.values.copy()                         # shape (n, n)
+    base = sim_df.values.copy() # shape (n, n)
     noise = np.random.normal(0, noise_level, base.shape)
     ratings_raw = np.clip(base + noise, 0.0, 1.0)
 
-    # randomly mask out 60% of pairs
+    # Randomly mask out 60% of pairs
     mask = np.random.rand(n, n) < 0.40
     np.fill_diagonal(mask, False)
     ratings_observed = np.where(mask, ratings_raw, 0.0)
 
-    # stretch from [0,1] to [1,5]
+    # Stretch from [0,1] to [1,5] (scaling ratings)
     ratings_scaled = ratings_observed * 4.0 + 1.0
     ratings_scaled = np.where(mask, ratings_scaled, 0.0)
 
@@ -158,11 +149,8 @@ def build_interaction_matrix(person_ids, sim_df, noise_level=0.15):
 
 
 def collaborative_svd(rating_df, mask, n_components=None):
-    """
-    Run TruncatedSVD on the ratings matrix to get latent factors,
-    then reconstruct the full matrix. n_components is picked
-    automatically (capped at n-1 and 5).
-    """
+    # Apply SVD to predict missing ratings
+    # Factor matrix into user preferences, reconstruct full matrix from those features
     n = len(rating_df)
     if n_components is None:
         n_components = max(1, min(n - 1, 5))
@@ -176,61 +164,56 @@ def collaborative_svd(rating_df, mask, n_components=None):
     pred_df = pd.DataFrame(pred_matrix,
                            index=rating_df.index,
                            columns=rating_df.columns)
-    # normalize back to [0, 1] so it blends cleanly with content scores
+    # Normalize back to [0, 1] so it blends cleanly with content scores
     pred_norm = (pred_df - 1.0) / 4.0
+    
     return pred_norm, svd.explained_variance_ratio_.sum()
 
 
 def top_k_collab(pred_df, person_id, k=3):
-    """Top-k most compatible people by collaborative score."""
+    # Top-k most compatible people by collaborative score
     if person_id not in pred_df.index:
         return []
     row = pred_df.loc[person_id].copy()
     row[person_id] = 0.0
     row_sorted = row.sort_values(ascending=False)
+    
     return list(row_sorted.head(k).items())
 
 
-# ----------------------------------------------------------------
-# 4.  Hybrid Model
-# ----------------------------------------------------------------
-
+# Combining to form hybrid model
 def hybrid_score(sim_df, pred_df, alpha=0.55):
-    """
-    Weighted blend of content and collaborative scores.
-    alpha=0.55 leans slightly toward content-based -- helps when
-    collaborative data is sparse (cold-start problem).
-    """
+    # Weighted blend of content and collaborative scores.
+    # alpha=0.55 leans slightly toward content-based -- helps when collaborative data is sparse
+    
     combined = (alpha * sim_df + (1 - alpha) * pred_df).copy()
     arr = combined.values.copy()
     np.fill_diagonal(arr, 0.0)
     combined = pd.DataFrame(arr, index=combined.index, columns=combined.columns)
+    
     return combined
 
 
 def top_k_hybrid(hybrid_df, person_id, k=3):
-    """Top-k recommendations from the hybrid matrix."""
+    # Top-k recommendations from the hybrid matrix
     if person_id not in hybrid_df.index:
         return []
     row = hybrid_df.loc[person_id].sort_values(ascending=False)
+
     return list(row.head(k).items())
 
 
-# ----------------------------------------------------------------
-# 5.  Evaluation
-# ----------------------------------------------------------------
-
+# Evaluation
 def evaluate(rating_df, mask, pred_norm_df, k=3):
-    """
-    90/10 train/test split on the observed ratings.
+    # 90/10 train/test split on the observed ratings
 
-    RMSE tells us how close predicted ratings are to held-out ones.
-    Precision@K is the fraction of top-K recs that are actually
-    "relevant" (true rating >= 3.5 out of 5).
-    """
+    # RMSE tells us how close predicted ratings are to held-out ones
+    # Precision@K is the fraction of top-K recs that are actually relevant (true rating >= 3.5 out of 5).
+
     person_ids = rating_df.index.tolist()
     n = len(person_ids)
 
+    # Collect observed rating pairs
     observed_pairs = []
     for i in range(n):
         for j in range(n):
@@ -241,11 +224,13 @@ def evaluate(rating_df, mask, pred_norm_df, k=3):
         print("  [Eval] Not enough observed ratings for a meaningful split.")
         return
 
+    # Split into train/test
     random.shuffle(observed_pairs)
     split = int(0.9 * len(observed_pairs))
     train_pairs = observed_pairs[:split]
     test_pairs  = observed_pairs[split:]
 
+    # Compute RMSE
     y_true, y_pred = [], []
     for (i, j) in test_pairs:
         true_rating = rating_df.iloc[i, j]
@@ -255,6 +240,7 @@ def evaluate(rating_df, mask, pred_norm_df, k=3):
 
     rmse = math.sqrt(mean_squared_error(y_true, y_pred))
 
+    # Compute Precision@K
     relevant_threshold = 3.5
     precision_scores = []
     for pid in person_ids:
@@ -280,22 +266,18 @@ def evaluate(rating_df, mask, pred_norm_df, k=3):
     print("  Precision@{}  : {:.4f}  (higher is better; 0-1)".format(k, precision_at_k))
 
 
-# ----------------------------------------------------------------
-# 6.  Output
-# ----------------------------------------------------------------
-
+# Output
 def save_recommendations(hybrid_df, output_path="recommendations.csv", k=3):
-    """
-    Write top-K recommendations for every person to CSV so C++ can
-    optionally reload and display them.
+    # Write top-K recommendations for every person to CSV so C++ can optionally reload and display them.
+    # Format: person_id, rank, recommended_id, hybrid_score
 
-    Format: person_id, rank, recommended_id, hybrid_score
-    """
     rows = []
     for pid in hybrid_df.index:
         row = hybrid_df.loc[pid].copy()
         row[pid] = 0.0
+
         top_k = row.nlargest(k)
+
         for rank, (rec_id, score) in enumerate(top_k.items(), start=1):
             rows.append({
                 "person_id":      pid,
@@ -328,10 +310,7 @@ def print_recommendations(hybrid_df, content_df, collab_df, k=3):
                 rank, rec_id, c_score, cf_score, h_score))
 
 
-# ----------------------------------------------------------------
 # Main
-# ----------------------------------------------------------------
-
 def main():
     if len(sys.argv) < 2:
         csv_path = "profiles.csv"

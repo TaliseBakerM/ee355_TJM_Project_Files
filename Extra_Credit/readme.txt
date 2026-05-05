@@ -46,7 +46,7 @@ Testing:
    last name=Louis-Dreyfus
    profiles=3
  
-Before funning python script, must use 8 then 4 to export the data to a csv file (profiles.csv)
+Before running python script, must use 8 then 4 to export the data to a csv file (profiles.csv)
 Compile python portion with:
 pip3 install scikit-learn pandas numpy scipy
 python3 recommend.py profiles.csv
@@ -65,16 +65,17 @@ Lines 75-107 approximately:
 be processed later on. 
 
 
-
 cosine similarity code with sklearn:
 - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html
 Lines 115-121 approximately:
 - This function helps to convert each person's data for all the people into a matrix representing the similarity between each person. A score of 1 would mean that the two people
 match in their profiles, while a score of 0 represents that these two people share nothing in their profiles. 
 
+
 A super helpful source which was the inspiration for some of the processing
 - https://fritz.ai/recommender-systems-with-python/
 - this source helped with the content_based() function and the top_k_content() functions and generally explains how the process can help make recommendations
+
 
 truncatedSVD methods:
 - https://towardsdatascience.com/a-complete-guide-to-recommender-system-tutorial-with-sklearn-surprise-keras-recommender-5e52e8ceace1/ 
@@ -85,7 +86,8 @@ Lines 163-178 approximately:
 - this helps explain why truncated SVD is better than a regular SVD which has a U, sigma, and V matrix
 - we only compute the top k singular values (found in the sigma matrix), which reduces how much processing it has to do expecially with a lot of people
 
-more info on recommendation systems: + recall and precision
+
+More info on recommendation systems: + recall and precision
 - https://medium.com/@m_n_malaeb/recall-and-precision-at-k-for-recommender-systems-618483226c54 
 Lines 206-230 approximately:
 - this resource helped us evaluate the precision and recall of the recommendation system we built and was used to guide the code
