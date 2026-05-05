@@ -46,7 +46,7 @@ Testing:
    last name=Louis-Dreyfus
    profiles=3
  
-Before running python script, must use 8 then 4 to export the data to a csv file (profiles.csv)
+Before running python script, must use 9 to export the data to a csv file (profiles.csv)
 Compile python portion with:
 pip3 install scikit-learn pandas numpy scipy
 python3 recommend.py profiles.csv
