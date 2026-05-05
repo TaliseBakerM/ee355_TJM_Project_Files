@@ -16,11 +16,10 @@ RoommateProfile::RoommateProfile() {
     pref_weights["smoking"]     = 5; // smoking is a strong dealbreaker by default
 }
 
+// Build profile and loads saved data from file 
 RoommateProfile::RoommateProfile(string filename) : RoommateProfile() {
     load(filename);
 }
-
-// File I/O
 
 /*
   File format (section headers are literal strings):
@@ -61,10 +60,11 @@ void RoommateProfile::load(string filename) {
     string line;
     string section = "";
 
+    // Read file line by line
     while (getline(fin, line)) {
         if (line.empty()) continue;
 
-        // Section header detection
+        // Section header detection (since they begin w/ '[')
         if (line[0] == '[') {
             section = line;
             continue;
@@ -102,6 +102,7 @@ void RoommateProfile::load(string filename) {
     fin.close();
 }
 
+// Save curr. profile back to file using same section format
 void RoommateProfile::save(ofstream& out) const {
     out << "[ATTRIBUTES]\n";
     for (map<string,string>::const_iterator it = attributes.begin(); it != attributes.end(); ++it) {
@@ -139,30 +140,29 @@ void RoommateProfile::save(ofstream& out) const {
 }
 
 // Print
-
 void RoommateProfile::print() const {
     cout << "  -- Roommate Profile --\n";
 
-    // Attributes (map: sorted by key automatically)
+    // Attributes (sorted by key)
     cout << "  Attributes:\n";
     for (map<string,string>::const_iterator it = attributes.begin(); it != attributes.end(); ++it) {
         cout << "    " << it->first << ": " << it->second << "\n";
     }
 
-    // Preferences (vector: ordered)
+    // Preferences (sorted by order entered in)
     cout << "  Preferences:\n";
     for (size_t i = 0; i < preferences.size(); i++) {
         cout << "    " << (i+1) << ". " << preferences[i] << "\n";
     }
 
-    // Weights (unordered_map: printed via sorted copy)
+    // Weights (unordered, printed via sorted copy)
     cout << "  Preference Weights:\n";
     map<string,int> sorted_w(pref_weights.begin(), pref_weights.end());
     for (map<string,int>::const_iterator it = sorted_w.begin(); it != sorted_w.end(); ++it) {
         cout << "    " << it->first << " -> " << it->second << "/5\n";
     }
 
-    // Hobbies (list: sorted)
+    // Hobbies (sorted)
     cout << "  Hobbies: ";
     for (list<string>::const_iterator it = hobbies.begin(); it != hobbies.end(); ++it) {
         cout << *it;
@@ -172,7 +172,7 @@ void RoommateProfile::print() const {
     }
     cout << "\n";
 
-    // Dealbreakers (set: unique, sorted)
+    // Dealbreakers (unique, sorted)
     cout << "  Dealbreakers: ";
     for (set<string>::const_iterator it = dealbreakers.begin(); it != dealbreakers.end(); ++it) {
         cout << *it;
@@ -182,23 +182,25 @@ void RoommateProfile::print() const {
     }
     cout << "\n";
 
-    // Activity log (deque: recent first)
+    // Activity log (deque, recent first)
     cout << "  Recent Activity:\n";
     for (size_t i = 0; i < activity_log.size(); i++) {
         cout << "    [" << i+1 << "] " << activity_log[i] << "\n";
     }
 }
 
-// Mutators
-
+// Add/update attribute
 void RoommateProfile::add_attribute(string key, string value) {
     attributes[key] = value;
 }
 
+// Add preference to list
 void RoommateProfile::add_preference(string pref) {
     preferences.push_back(pref);
 }
 
+// Add log entry to front of activity history
+// If log too large, drop oldest entry
 void RoommateProfile::log_activity(string entry) {
     activity_log.push_front(entry); // newest at front
     if ((int)activity_log.size() > LOG_MAX) {
@@ -206,6 +208,7 @@ void RoommateProfile::log_activity(string entry) {
     }
 }
 
+// Add hobby into list (keeping sorted)
 void RoommateProfile::add_hobby(string hobby) {
     // Sorted insertion into list
     list<string>::iterator it = hobbies.begin();
@@ -213,10 +216,12 @@ void RoommateProfile::add_hobby(string hobby) {
     hobbies.insert(it, hobby);
 }
 
+// Add dealbreaker to set
 void RoommateProfile::add_dealbreaker(string item) {
     dealbreakers.insert(item);
 }
 
+// Set importance/weight for one preference category
 void RoommateProfile::set_weight(string key, int weight) {
     pref_weights[key] = weight;
 }
@@ -226,17 +231,17 @@ void RoommateProfile::set_weight(string key, int weight) {
 /*
   Scoring breakdown (total 100 pts):
     - Attribute matches (college, state, zip, sleep, cleanliness): up to 40 pts
-    - Shared hobbies:                                               up to 20 pts
-    - Dealbreaker conflicts (penalizes):                           up to -30 pts
-    - Preference overlap (weighted):                               up to 30 pts
-    - Shared preferences:                                          up to 10 pts
+    - Shared hobbies: up to 20 pts
+    - Dealbreaker conflicts (penalizes): up to -30 pts
+    - Preference overlap (weighted): up to 30 pts
+    - Shared preferences: up to 10 pts
 */
 
 int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
     double score = 0.0;
 
     // 1. Attribute matching (40 pts)
-    // Weighted attribute matches
+    // Each attribute contributes a diff. # of pts
     struct AttrWeight { string key; double pts; };
     AttrWeight attr_weights[] = {
         {"college",     12.0},
@@ -249,9 +254,11 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
     for (int i = 0; i < n_attrs; i++) {
         map<string,string>::const_iterator a = attributes.find(attr_weights[i].key);
         map<string,string>::const_iterator b = other.attributes.find(attr_weights[i].key);
+        
+        // Only compare if both profiles have that field
         if (a != attributes.end() && b != other.attributes.end()) {
             if (a->second == b->second) {
-                score += attr_weights[i].pts;
+                score += attr_weights[i].pts; // Exact match = full pts
             } else if (attr_weights[i].key == "cleanliness") {
                 // Partial credit for close cleanliness scores
                 int diff = abs(atoi(a->second.c_str()) - atoi(b->second.c_str()));
@@ -265,6 +272,7 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
     int total_hobbies = 0;
     for (list<string>::const_iterator it = hobbies.begin(); it != hobbies.end(); ++it) {
         total_hobbies++;
+        
         // Check if other has this hobby (list linear search)
         for (list<string>::const_iterator jt = other.hobbies.begin(); jt != other.hobbies.end(); ++jt) {
             if (*it == *jt) { shared_hobbies++; break; }
@@ -283,7 +291,7 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
             }
         }
     }
-    // Reciprocal: their dealbreakers vs my preferences
+    // Check reciprocal (their dealbreakers vs my preferences)
     for (set<string>::const_iterator it = other.dealbreakers.begin(); it != other.dealbreakers.end(); ++it) {
         for (size_t j = 0; j < preferences.size(); j++) {
             if (preferences[j] == *it) {
@@ -296,8 +304,10 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
     // For each shared preference key, add weighted score
     double weight_score = 0.0;
     double max_weight_score = 0.0;
+    
     string weight_keys[] = {"quiet", "cleanliness", "social", "studious", "pets", "smoking"};
     int n_keys = 6;
+    
     for (int i = 0; i < n_keys; i++) {
         unordered_map<string,int>::const_iterator wa = pref_weights.find(weight_keys[i]);
         unordered_map<string,int>::const_iterator wb = other.pref_weights.find(weight_keys[i]);
@@ -314,7 +324,7 @@ int RoommateProfile::compatibility_score(const RoommateProfile& other) const {
         score += 30.0 * (weight_score / max_weight_score);
     }
 
-    // Clamp to [0, 100]
+    // Set boundary [0, 100]
     if (score < 0.0) score = 0.0;
     if (score > 100.0) score = 100.0;
 
@@ -329,7 +339,6 @@ bool RoommateProfile::operator>(const RoommateProfile& other) const {
 }
 
 // CSV export for Python ML pipeline
-
 string RoommateProfile::csv_header() {
     return "person_id,college,major,year,state,zip,sleep,cleanliness,"
            "w_quiet,w_cleanliness,w_social,w_studious,w_pets,w_smoking,"
@@ -340,10 +349,12 @@ string RoommateProfile::csv_header() {
 string RoommateProfile::to_csv_row(string person_id) const {
     auto get_attr = [&](string key) -> string {
         map<string,string>::const_iterator it = attributes.find(key);
+        
         return (it != attributes.end()) ? it->second : "";
     };
     auto get_weight = [&](string key) -> string {
         unordered_map<string,int>::const_iterator it = pref_weights.find(key);
+        
         if (it != pref_weights.end()) {
             stringstream ss;
             ss << it->second;
