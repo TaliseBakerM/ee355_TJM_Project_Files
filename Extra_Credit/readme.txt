@@ -91,3 +91,26 @@ More info on recommendation systems: + recall and precision
 - https://medium.com/@m_n_malaeb/recall-and-precision-at-k-for-recommender-systems-618483226c54 
 Lines 206-230 approximately:
 - this resource helped us evaluate the precision and recall of the recommendation system we built and was used to guide the code
+
+
+
+Help for roommate.cpp (in addition to lecture notes and resources recommended in lecture)
+https://en.cppreference.com/cpp/container
+- in addition to the lecture notes this helped us pick what data structures (like what STLs) to use
+
+Help with maps
+- https://en.cppreference.com/cpp/container/map
+
+
+Help with unordered maps
+- https://www.geeksforgeeks.org/cpp/unordered_map-in-cpp-stl/
+
+
+Vector + list + sets
+- from lecture notes (for vector and list)
+- https://medium.com/@megha_bh/stl-containers-vector-set-and-map-7a90e0b1e19f
+- above links as well
+
+
+Deque
+- lecture notes
