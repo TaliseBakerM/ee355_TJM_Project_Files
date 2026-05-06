@@ -55,7 +55,7 @@ public:
     void set_roommate_profile(string filename);     // load from file
     void print_roommate_profile() const;
     bool has_roommate_profile() const;
-    int roommate_compatibility(const Person& other) const; // 0–100
+    int roommate_compatibility(const Person& other) const; 
 };
 
 #endif
