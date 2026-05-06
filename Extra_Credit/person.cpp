@@ -211,12 +211,10 @@ void Person::print_friends() const
     }
 }
 
-// ─────────────────────────────────────────────────────────
-// Phase 3: Roommate Profile Methods
-// ─────────────────────────────────────────────────────────
+// Phase 3 adding roommmate stuff and functions for roommmate matching
 
 void Person::set_roommate_profile() {
-    if (roommate_profile != NULL) {
+    if (roommate_profile != NULL) { // need to check if the profile exists and delete otherwise issue when debugging
         delete roommate_profile;
     }
     roommate_profile = new RoommateProfile();
@@ -225,8 +223,8 @@ void Person::set_roommate_profile() {
 
     cout << "\n  -- Setting Roommate Profile for " << f_name << " " << l_name << " --\n";
 
-    // Attributes
-    cout << "  College (e.g. USC): ";
+    // Attributes for the romommate profile
+    cout << "  College (e.g. USC): "; 
     getline(cin, input);
     roommate_profile->add_attribute("college", input);
 
@@ -254,7 +252,7 @@ void Person::set_roommate_profile() {
     getline(cin, input);
     roommate_profile->add_attribute("cleanliness", input);
 
-    // Preferences
+    // Preferences (open ended asking them for some)
     cout << "  Enter preferences one per line (blank line to stop):\n";
     cout << "  Options: quiet hours, no smoking, pets ok, early bird, night owl, guests ok, no guests\n";
     while (true) {
@@ -264,7 +262,7 @@ void Person::set_roommate_profile() {
         roommate_profile->add_preference(input);
     }
 
-    // Weights
+    // Weights for how important things are so is quiet more important than clean or both equally important
     cout << "  Rate importance of quiet (1-5): ";
     getline(cin, input);
     roommate_profile->set_weight("quiet", atoi(input.c_str()));
@@ -289,7 +287,7 @@ void Person::set_roommate_profile() {
     getline(cin, input);
     roommate_profile->set_weight("smoking", atoi(input.c_str()));
 
-    // Hobbies
+    // Hobbies, again kinda open ended 
     cout << "  Enter hobbies one per line (blank line to stop):\n";
     while (true) {
         cout << "  > ";
@@ -312,6 +310,10 @@ void Person::set_roommate_profile() {
     cout << "  Roommate profile saved!\n";
 }
 
+
+
+
+
 void Person::set_roommate_profile(string filename) {
     if (roommate_profile != NULL) {
         delete roommate_profile;
@@ -320,6 +322,7 @@ void Person::set_roommate_profile(string filename) {
 }
 
 void Person::print_roommate_profile() const {
+    // check case where no profile exists
     if (roommate_profile == NULL) {
         cout << "  No roommate profile set.\n";
         return;
@@ -333,7 +336,7 @@ bool Person::has_roommate_profile() const {
 
 int Person::roommate_compatibility(const Person& other) const {
     if (roommate_profile == NULL || other.roommate_profile == NULL) {
-        return -1; // Can't score without both profiles
+        return -1; // Can't score without both people having profiles
     }
     return roommate_profile->compatibility_score(*other.roommate_profile);
 }

@@ -7,13 +7,13 @@
 // Constructors
 
 RoommateProfile::RoommateProfile() {
-    // Default weights — user can override
+    // Default weights, user can override
     pref_weights["quiet"]       = 3;
     pref_weights["cleanliness"] = 3;
     pref_weights["social"]      = 3;
     pref_weights["studious"]    = 3;
     pref_weights["pets"]        = 2;
-    pref_weights["smoking"]     = 5; // smoking is a strong dealbreaker by default
+    pref_weights["smoking"]     = 5; // smoking is a strong dealbreaker by default cause we hate smoking
 }
 
 // Build profile and loads saved data from file 
@@ -22,7 +22,7 @@ RoommateProfile::RoommateProfile(string filename) : RoommateProfile() {
 }
 
 /*
-  File format (section headers are literal strings):
+  File format:
   
   [ATTRIBUTES]
   college=USC
@@ -102,7 +102,7 @@ void RoommateProfile::load(string filename) {
     fin.close();
 }
 
-// Save curr. profile back to file using same section format
+// Save current profile back to file using same section format
 void RoommateProfile::save(ofstream& out) const {
     out << "[ATTRIBUTES]\n";
     for (map<string,string>::const_iterator it = attributes.begin(); it != attributes.end(); ++it) {
@@ -115,7 +115,7 @@ void RoommateProfile::save(ofstream& out) const {
     }
 
     out << "[WEIGHTS]\n";
-    // Use a sorted map for deterministic output
+    // Use a sorted map to sort by weights
     map<string,int> sorted_weights(pref_weights.begin(), pref_weights.end());
     for (map<string,int>::const_iterator it = sorted_weights.begin(); it != sorted_weights.end(); ++it) {
         out << it->first << "=" << it->second << "\n";

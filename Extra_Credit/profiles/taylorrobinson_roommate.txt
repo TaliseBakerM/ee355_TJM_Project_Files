@@ -1,11 +1,11 @@
 [ATTRIBUTES]
 cleanliness=4
 college=USC
-major=Film Studies
+major=Film
 sleep=night owl
 state=NY
 year=Sophomore
-zip=90028
+zip=90007xs
 [PREFERENCES]
 guests ok
 social atmosphere

@@ -203,9 +203,7 @@ bool Network::remove(string fname, string lname){
     return false;
 }
 
-// ─────────────────────────────────────────────────────────
-// Phase 3: Roommate Features
-// ─────────────────────────────────────────────────────────
+// Phase 3 Roommate features
 
 /*
   loadRoommateProfiles: looks for files named "<person_id>_roommate.txt"
@@ -311,9 +309,7 @@ void Network::showTopMatches(string fname, string lname, int top_n) const {
     }
 }
 
-// ─────────────────────────────────────────────────────────
-// showMenu
-// ─────────────────────────────────────────────────────────
+// showMenu updated with phase 3 options
 
 void Network::showMenu(){
     int opt;
@@ -496,7 +492,7 @@ void Network::showMenu(){
             }
         }
 
-        // ── Phase 3 ──────────────────────────────────────────
+        // Phase 3 additions
         else if (opt == 8) {
             cout << "  ===== Roommate Finder =====\n";
             cout << "  1. Set/update my roommate profile\n";
@@ -581,9 +577,7 @@ void Network::showMenu(){
     }
 }
 
-// ─────────────────────────────────────────────────────────
-// Main
-// ─────────────────────────────────────────────────────────
+// Main to run code
 
 int main() {
     cout << "Starting main\n";

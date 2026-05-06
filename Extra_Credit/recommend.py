@@ -9,9 +9,8 @@ recommend.py -- Phase 3 Roommate Recommendation System
 - Combine both into a recommender
 - Evaluate model performance (RMSE, Precision@K)
 - Output recommendations to CSV (recommendations.csv) 
+- see resources in readme file
 
-STL containers used on C++ side (referenced in comments):
-    map, vector, deque, list, set, unordered_map
 """
 
 import sys
