@@ -6,6 +6,8 @@ May Syi Ang, maysyian@usc.edu, 6524773417
 
 ------------------------------------------- EXTRA CREDIT -------------------------------------------
 
+Video of how it works: https://drive.google.com/file/d/16q3BFcPhwGTZZPdZtrUD3kOkxqtVwaYw/view
+
 Compile with:
 g++ -std=c++11 network.cpp roommate.cpp contact.cpp date.cpp misc.cpp person.cpp -o test.out
 ./test.out
@@ -100,6 +102,7 @@ https://en.cppreference.com/cpp/container
 
 Help with maps
 - https://en.cppreference.com/cpp/container/map
+- good for storing key-value pairs
 
 
 Help with unordered maps
@@ -110,7 +113,9 @@ Vector + list + sets
 - from lecture notes (for vector and list)
 - https://medium.com/@megha_bh/stl-containers-vector-set-and-map-7a90e0b1e19f
 - above links as well
+- essentially storing items in multiple different ways
 
 
 Deque
 - lecture notes
+- same as above, practicing STLs by storing data different ways based on what we learned in lecture
