@@ -70,50 +70,68 @@ Person* Network::searchbyID(string id) {
 
 
 void Network::loadDB(string filename){
+    // TODO: Complete this method
     ifstream infile(filename.c_str());
     if (!infile) {
         cout << filename << " does not exist.\n";
         return;
     }
-    head=NULL;
-    tail=NULL;
-    count=0;
-    string f_name, l_name, b_date, email_line, phone_line, friends_line;
-    while (getline(infile, f_name)) {
-        if (f_name.empty() || f_name == "--------------------") {
-            continue;
-        }
-        else {
-            getline(infile, l_name);
-            getline(infile, b_date);
-            getline(infile, email_line);
-            getline(infile, phone_line);
-        }
-
-        // Parse email_line
+    head = NULL;
+    tail = NULL;
+    count = 0;
+ 
+    vector<pair<Person*, vector<string> > > friend_lists;
+ 
+    string line;
+    while (getline(infile, line)) {
+        if (line.empty() || line == "--------------------") continue;
+ 
+        // line is f_name at this point
+        string f_name = line;
+        string l_name, b_date, email_line, phone_line;
+        getline(infile, l_name);
+        getline(infile, b_date);
+        getline(infile, email_line);
+        getline(infile, phone_line);
+ 
         int pos = email_line.find(')');
         string email = email_line.substr(pos + 2);
         string email_type = email_line.substr(1, pos - 1);
         pos = phone_line.find(')');
         string phone = phone_line.substr(pos + 2);
         string phone_type = phone_line.substr(1, pos - 1);
+ 
         Person* newEntry = new Person(f_name, l_name, b_date, email, phone);
         push_front(newEntry);
-
-        // Read optional friends line
-        getline(infile, friends_line);
-        if (friends_line == "Friends: ") {
-            while (getline(infile, friends_line) && !friends_line.empty()) {
-                Person* friendPtr = searchbyID(friends_line);
-                if (friendPtr != NULL) {
-                    newEntry->myfriends.push_back(friendPtr);
-                }
+ 
+        // Read friend IDs until "--------------------"
+        vector<string> ids;
+        string friends_header;
+        getline(infile, friends_header); 
+        if (friends_header == "Friends:") {
+            string fid;
+            while (getline(infile, fid) && fid != "--------------------") {
+                if (!fid.empty()) ids.push_back(fid);
+            }
+        }
+        friend_lists.push_back(make_pair(newEntry, ids));
+    }
+ 
+    // all people are now in the list, so link friends by ID
+    for (int i = 0; i < (int)friend_lists.size(); i++) {
+        Person* person = friend_lists[i].first;
+        vector<string>& ids = friend_lists[i].second;
+        for (int j = 0; j < (int)ids.size(); j++) {
+            Person* friendPtr = searchbyID(ids[j]);
+            if (friendPtr != NULL) {
+                person->myfriends.push_back(friendPtr);
             }
         }
     }
 }
-
+ 
 void Network::saveDB(string filename){
+    // TODO: Complete this method
     ofstream outfile(filename.c_str());
     if (!outfile) {
         cout << "Error opening file for writing.\n";
@@ -121,16 +139,27 @@ void Network::saveDB(string filename){
     }
     Person* current = head;
     while (current != NULL) {
-        outfile << current->l_name << ", " << current->f_name << "\n\n";
-        outfile << current->birthdate->to_string() << "\n\n";
-        outfile << current->phone->get_contact() << "\n\n";
-        outfile << current->email->get_contact() << "\n\n";
-
-        outfile << "Friends: \n\n";
-        for (int i=0; i<(int)current->myfriends.size(); i++) {
+        outfile << current->f_name << "\n";
+        outfile << current->l_name << "\n";
+        outfile << current->birthdate->to_string() << "\n";
+ 
+        string email_full = current->email->get_contact("full");
+        size_t lp = email_full.find('(');
+        size_t rp = email_full.find(')');
+        outfile << "(" << email_full.substr(lp + 1, rp - lp - 1) << ") "
+                << current->email->get_contact("short") << "\n";
+ 
+        string phone_full = current->phone->get_contact("full");
+        lp = phone_full.find('(');
+        rp = phone_full.find(')');
+        outfile << "(" << phone_full.substr(lp + 1, rp - lp - 1) << ") "
+                << current->phone->get_contact("short") << "\n";
+ 
+        outfile << "Friends:\n";
+        for (int i = 0; i < (int)current->myfriends.size(); i++) {
             outfile << current->myfriends[i]->id << "\n";
         }
-        outfile << "\n";
+        outfile << "--------------------\n";
         current = current->next;
     }
 }

@@ -3,6 +3,7 @@
 #include "misc.h"
 #include <fstream>
 #include <limits>
+#include <vector>
 
 Network::Network(){
     head = NULL;
@@ -66,6 +67,7 @@ Person* Network::searchbyID(string id) {
         if (current->id == id) {
             return current;
         }
+        current = current->next;
     }
     return NULL;
 }
@@ -78,45 +80,54 @@ void Network::loadDB(string filename){
         cout << filename << " does not exist.\n";
         return;
     }
-    head=NULL;
-    tail=NULL;
-    count=0;
-    string f_name, l_name, b_date, email_line, phone_line, friends_line;
-    while (getline(infile, f_name)) {
-        // cout << "Read first name: " << f_name << "\n";
-        if (f_name.empty() || f_name == "--------------------") {
-            // cout << "Skipping empty line or delimiter\n";
-            continue;
-        }
-        else {
-            getline(infile, l_name);
-            // cout << "Read last name: " << l_name << "\n";
-            getline(infile, b_date);
-            // cout << "Read birthdate: " << b_date << "\n";
-            getline(infile, email_line);
-            //cout << "Read email line: " << email_line << "\n";
-            getline(infile, phone_line);
-            // cout << "Read phone line: " << phone_line << "\n";
-        }
+    head = NULL;
+    tail = NULL;
+    count = 0;
 
-        // Parse email_line to get email type and email address
+    vector<pair<Person*, vector<string>>> friend_lists;
+
+    string line;
+    while (getline(infile, line)) {
+        if (line.empty() || line == "--------------------") continue;
+
+        // line is f_name at this point
+        string f_name = line;
+        string l_name, b_date, email_line, phone_line;
+        getline(infile, l_name);
+        getline(infile, b_date);
+        getline(infile, email_line);
+        getline(infile, phone_line);
+
         int pos = email_line.find(')');
-        string email = email_line.substr(pos + 2); // +2 to skip the whitespace after )
+        string email = email_line.substr(pos + 2);
         string email_type = email_line.substr(1, pos - 1);
         pos = phone_line.find(')');
         string phone = phone_line.substr(pos + 2);
         string phone_type = phone_line.substr(1, pos - 1);
+
         Person* newEntry = new Person(f_name, l_name, b_date, email, phone);
         push_front(newEntry);
 
-        // Read friends line and add friends (NEED TO EDIT)
-        getline(infile, friends_line);
-        if (friends_line == "Friends: ") {
-            while (getline(infile, friends_line) && !friends_line.empty()) {
-                Person* friendPtr = searchbyID(friends_line);
-                if (friendPtr != NULL) {
-                    newEntry->myfriends.push_back(friendPtr);
-                }
+        // Read friend IDs until "--------------------"
+        vector<string> ids;
+        string friends_header;
+        getline(infile, friends_header); // "Friends:" line
+        if (friends_header == "Friends:") {
+            string fid;
+            while (getline(infile, fid) && fid != "--------------------") {
+                if (!fid.empty()) ids.push_back(fid);
+            }
+        }
+        friend_lists.push_back(make_pair(newEntry, ids));
+    }
+
+    for (int i = 0; i < (int)friend_lists.size(); i++) {
+        Person* person = friend_lists[i].first;
+        vector<string>& ids = friend_lists[i].second;
+        for (int j = 0; j < (int)ids.size(); j++) {
+            Person* friendPtr = searchbyID(ids[j]);
+            if (friendPtr != NULL) {
+                person->myfriends.push_back(friendPtr);
             }
         }
     }
@@ -131,17 +142,33 @@ void Network::saveDB(string filename){
     }
     Person* current = head;
     while (current != NULL) {
-        outfile << current->l_name << ", " << current->f_name << "\n" << "\n";
-        outfile << current->birthdate->to_string() << "\n" << "\n"; // Changed print_date to to_string during debugging
-        outfile << current->phone->get_contact() << "\n" << "\n";
-        outfile << current->email->get_contact() << "\n" << "\n";
+        outfile << current->f_name << "\n";
+        outfile << current->l_name << "\n";
+        outfile << current->birthdate->to_string() << "\n";
+ 
+        string email_full = current->email->get_contact("full");
+        size_t lp = email_full.find('(');
+        size_t rp = email_full.find(')');
+        outfile << "(" << email_full.substr(lp + 1, rp - lp - 1) << ") "
+                << current->email->get_contact("short") << "\n";
+ 
+        string phone_full = current->phone->get_contact("full");
+        lp = phone_full.find('(');
+        rp = phone_full.find(')');
+        outfile << "(" << phone_full.substr(lp + 1, rp - lp - 1) << ") "
+                << current->phone->get_contact("short") << "\n";
 
-        outfile << "Friends: " << "\n" << "\n";
-        for (int i=0; i<current->myfriends.size(); i++) {
+
+        outfile << "Friends:\n";
+        for (int i = 0; i < (int)current->myfriends.size(); i++) {
             outfile << current->myfriends[i]->id << "\n";
         }
-        outfile << "\n";
+ 
+        outfile << "--------------------\n";
         current = current->next;
+
+
+
     }
 }
 
@@ -410,6 +437,7 @@ void Network::showMenu(){
                 else if (current->l_name == input) {found = true;}
                 else if (current->phone->get_contact("short") == input) {found = true;}
                 else if (current->email->get_contact("short") == input) {found = true;}
+                else if (current->id == input) {found = true;} 
                 else if (current->birthdate->to_string() == input) {found = true;} // If user input birthday as e.g. January 1, 2019
                 else {
                     Date inputDate(input); // If user input birthday as MM/DD/YYYY or M/D/YYYY

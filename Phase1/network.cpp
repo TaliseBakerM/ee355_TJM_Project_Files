@@ -122,10 +122,23 @@ void Network::saveDB(string filename){
     }
     Person* current = head;
     while (current != NULL) {
-        outfile << current->l_name << ", " << current->f_name << "\n" << "\n";
-        outfile << current->birthdate->to_string() << "\n" << "\n"; // Changed print_date to to_string during debugging
-        outfile << current->phone->get_contact() << "\n" << "\n";
-        outfile << current->email->get_contact() << "\n" << "\n";
+        outfile << current->f_name << "\n";
+        outfile << current->l_name << "\n";
+        outfile << current->birthdate->to_string() << "\n";
+
+        string email_full = current->email->get_contact("full");
+        size_t lp = email_full.find('(');
+        size_t rp = email_full.find(')');
+        outfile << "(" << email_full.substr(lp + 1, rp - lp - 1) << ") "
+                << current->email->get_contact("short") << "\n";
+
+        string phone_full = current->phone->get_contact("full");
+        lp = phone_full.find('(');
+        rp = phone_full.find(')');
+        outfile << "(" << phone_full.substr(lp + 1, rp - lp - 1) << ") "
+                << current->phone->get_contact("short") << "\n";
+
+        outfile << "--------------------\n";
         current = current->next;
     }
 }
